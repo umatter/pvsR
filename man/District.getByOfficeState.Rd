@@ -1,0 +1,69 @@
+\name{District.getByOfficeState}
+\alias{District.getByOfficeState}
+\title{Get district IDs according to the office and state}
+\usage{
+District.getByOfficeState(officeId, stateId, districtName=NULL, all=FALSE)
+}
+\arguments{
+  \item{officeId}{a character string or list of character
+  strings with the office ID(s) (see references for
+  details)}
+
+  \item{stateId}{a character string or list of character
+  strings with the state ID(s) (see references for
+  details)}
+
+  \item{districtName}{(optional) a character string or list
+  of character strings with the district name (default:
+  All)}
+
+  \item{all}{a logical indicator; if TRUE data on all
+  possible combinations of the input variables are
+  returned, if FALSE (default) only the exact combinations
+  of them (see example)}
+}
+\value{
+A data frame with a row for each district and columns with
+the following variables describing the district:\cr
+districtList.district*.districtId,\cr
+districtList.district*.name,\cr
+districtList.district*.officeId,\cr
+districtList.district*.stateId.
+}
+\description{
+This function is a wrapper for the
+District.getByOfficeState() method of the PVS API District
+class which grabs district IDs according to the office and
+state. The function sends a request with this method to the
+PVS API for all district names and office IDs given as a
+function input, extracts the XML values from the returned
+XML file(s) and returns them arranged in one data frame.
+}
+\examples{
+# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+\dontrun{pvs.key <- "yourkey"}
+# get districts for certain office and state IDs
+\dontrun{districts <- District.getByOfficeState(officeId=list(8,9),stateId=list("NY","NJ"))}
+\dontrun{district}
+# get a data frame of districts according to all state/office/districtName combinations
+\dontrun{districts <- District.getByOfficeState(officeId=list(8,9),stateId=list("NY","NJ"),
+ districtName=list(1,2), all=TRUE)}
+\dontrun{districts}
+# get a data frame of districts according to the exact state/office/districtName combinations
+# (i.e., 8/"NY"/1, 9/"NJ"/2)
+\dontrun{districts <- District.getByOfficeState(officeId=list(8,9),stateId=list("NY","NJ"),
+ districtName=list(1,2), all=FALSE)}
+\dontrun{districts}
+}
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}
+\references{
+http://api.votesmart.org/docs/District.html\cr See
+http://api.votesmart.org/docs/semi-static.html for a list
+of office IDs or use Office.getOfficesByType(),
+Office.getOfficesByLevel(), Office.getOfficesByTypeLevel()
+or Office.getOfficesByBranchLevel().\cr Use
+State.getStateIDs() to get a list of state IDs.
+}
+

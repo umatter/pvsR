@@ -1,0 +1,55 @@
+\name{Votes.getBillsByYearState}
+\alias{Votes.getBillsByYearState}
+\title{Get a list of bills according to year and state}
+\usage{
+Votes.getBillsByYearState(year, stateId, all=FALSE)
+}
+\arguments{
+  \item{year}{a character string or list of character
+  strings with the year(s)}
+
+  \item{stateId}{a character string or list of character
+  strings with the state ID(s) (see references for
+  details)}
+
+  \item{all}{a logical indicator; if TRUE data on all
+  possible combinations of the stateId and year are
+  returned, if FALSE (default) only the exact combinations
+  (see example)}
+}
+\value{
+A data frame with a row for each bill and columns with the
+following variables describing the bill:\cr
+bills.bill*.billId,\cr bills.bill*.billNumber,\cr
+bills.bill*.title,\cr bills.bill*.type.
+}
+\description{
+This function is a wrapper for the
+Votes.getBillsByYearState() method of the PVS API Votes
+class which returns a list of bills that fit the year and
+state input. The function sends a request with this method
+to the PVS API for all years and state IDs given as a
+function input, extracts the XML values from the returned
+XML file(s) and returns them arranged in one data frame.
+}
+\examples{
+# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+\dontrun{pvs.key <- "yourkey"}
+# get a data frame of bills according to all year and state combinations
+\dontrun{bills <- Votes.getBillsByYearState(year=list(2011,2012),
+stateId=list("NY","NJ"), all=TRUE)}
+\dontrun{head(bills)}
+# get a data frame of bills according to the exact year and state combinations
+# (i.e., 2011/"NY", 2012/"NJ")
+\dontrun{bills <- Votes.getBillsByYearState(year=list(2011,2012),
+stateId=list("NY","NJ"), all=FALSE)}
+\dontrun{head(bills)}
+}
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}
+\references{
+http://api.votesmart.org/docs/Votes.html\cr Use
+State.getStateIDs() to get a list of state IDs.
+}
+

@@ -1,0 +1,49 @@
+pvsR 0.1
+-----------------------------------
+
+* First release
+
+
+pvsR 0.1.1
+-----------------------------------
+
+* Fixed several bugs
+
+
+pvsR 0.2
+-----------------------------------
+
+* Improved pvsR's ability to deal with XML parsing errors 
+
+* Added a new wrapper function for the Npat.getNpat method
+
+* Added several high level functions that facilitate the download of data based on many API queries: 
+  getAllBios,
+  getAllCities,
+  getAllCounties,
+  getAllDistricts,
+  getAllLocalOfficials,
+  getOffices
+
+* Added default value (current year) to year parameter in functions: 
+  Election.getElectionByYearState,
+  Election.getElectionByZip,
+  
+* Fixed several little bugs
+
+
+pvsR 0.3
+-----------------------------------
+
+* Added a function (wrapper) for the new CandidateBio.getDetailedBio() method of the PVS API CandidateBio class
+
+* Added a high level function that facilitates the download of data based on many API queries: 
+  getAllVotes
+
+* Improved internal function dfList() with respect to handling empty xml-nodes
+  
+* Fixed several little bugs
+
+
+
+
