@@ -18,50 +18,32 @@
 ##' @export
 
 
-
 Votes.getByOfficial <-
-function (year, candidateId) {
-  
+	function (year, candidateId) {
 
-# internal function
-Votes.getByOfficial.basic <- function (.year, .candidateId) {
-  
-request <-  "Votes.getByOfficial?"
-inputs  <-  paste("&year=",.year,"&candidateId=",.candidateId,sep="")
-output  <-  pvsRequest(request,inputs)
-output$year <-.year
-output$candidateId <- .candidateId
-output
+		# internal function
+		Votes.getByOfficial.basic <- 
+			function (.year, .candidateId) {
 
-}
+				request <-  "Votes.getByOfficial?"
+				inputs  <-  paste("&year=",.year,"&candidateId=",.candidateId,sep="")
+				output  <-  pvsRequest(request,inputs)
+				output$year <-.year
+				output$candidateId <- .candidateId
+				output
+			}
 
-
-  #Main function
-  output.list <- lapply(year, FUN= function (y) {
-    lapply(candidateId, FUN= function (s) {
-      Votes.getByOfficial.basic(.year=y, .candidateId=s)
-           }
-        )
-    }
-  )
-
-
-output.list <- do.call("c",output.list)
-
-
-# which list entry has the most columns, how many are these?
-coln <- which.is.max(sapply(output.list, ncol));
-max.cols <- max(sapply(output.list, ncol));
-
-# give all list entries (dfs in list) the same number of columns and the same names
-output.list2 <- lapply(output.list, function(x){
-if (ncol(x) < max.cols) x <- data.frame(cbind(matrix(NA, ncol=max.cols-ncol(x), nrow = 1, ),x),row.names=NULL)
-names(x) <- names(output.list[[coln]])
-x
-})
-
-output <- do.call("rbind",output.list2)
-output
-
-
-}
+		#Main function
+		output.list <- lapply(year, FUN= function (y) {
+			lapply(candidateId, FUN= function (s) {
+				Votes.getByOfficial.basic(.year=y, .candidateId=s)
+			}
+			)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		return(output)
+	}

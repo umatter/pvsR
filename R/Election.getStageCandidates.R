@@ -6,7 +6,8 @@
 ##' @param stageId a character string or list of character strings with the stage ID(s)
 ##' @return A data frame with a row for each combination of stage ID and election and columns with the following variables describing the election:\cr stagecandidates.election*.electionId,\cr stagecandidates.election*.name,\cr stagecandidates.election*.stage,\cr stagecandidates.election*.stateId,\cr stagecandidates.candidate*.candidateId,\cr stagecandidates.candidate*.officeId,\cr stagecandidates.candidate*.district,\cr stagecandidates.candidate*.firstName,\cr stagecandidates.candidate*.middleName,\cr stagecandidates.candidate*.lastName,\cr stagecandidates.candidate*.suffix,\cr stagecandidates.candidate*.party,\cr stagecandidates.candidate*.status,\cr stagecandidates.candidate*.voteCount,\cr stagecandidates.candidate*.votePercent.
 ##' @references http://api.votesmart.org/docs/Election.html\cr
-##' Use Election.getElectionByYearState() or Election.getElectionByZip() to get election ID(s).
+##' Use Election.getElectionByYearState() or Election.getElectionByZip() to get election ID(s).\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -19,42 +20,33 @@
 
 
 Election.getStageCandidates <-
-function (stageId, electionId) {
-  
-  
-  # internal function
-  Election.getStageCandidates.basic <- function (.stageId, .electionId) {
-    
-    request <-  "Election.getStageCandidates?"
-    inputs  <-  paste("&stageId=",.stageId,"&electionId=",.electionId,sep="")
-    output  <-  pvsRequest6(request,inputs)
-    output$stageId <- .stageId
-    output$electionId <- .electionId
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(stageId, FUN= function (y) {
-    lapply(electionId, FUN= function (s) {
-      Election.getStageCandidates.basic(.stageId=y, .electionId=s)
-    }
-    )
+	function (stageId, electionId) {
 
-                        }
+		# internal function
+		Election.getStageCandidates.basic <- 
+			function (.stageId, .electionId) {
+				
+				request <-  "Election.getStageCandidates?"
+				inputs  <-  paste("&stageId=",.stageId,"&electionId=",.electionId,sep="")
+				output  <-  pvsRequest6(request,inputs)
+				output$stageId <- .stageId
+				output$electionId <- .electionId
+				
+				return(output)
+			}
 
-                        )
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+		# Main function  
+		output.list <- lapply(stageId, FUN= function (y) {
+			lapply(electionId, FUN= function (s) {
+				Election.getStageCandidates.basic(.stageId=y, .electionId=s)
+			}
+			)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		return(output)
+	
+		}
+

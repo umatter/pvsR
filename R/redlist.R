@@ -11,44 +11,28 @@
 # ' redlist(x=l1)
 
 redlist <-
-function (x) {
-  
-  
-  n <- 0
-  x. <- x
-  
-  # check how often the list has to be "unlisted" by the c function
-  # n gives the number of do.calls of c until there's one component that is not any more a list.
-  while (length(names(x.))==0) {
-    
-    x. <- do.call("c", x.)
-    n <- n + 1
-    
-  }
-  
-  
-  
-  # if n is greater than 1 do.call c n-1 times to get the required list
-  
-  if (n>1) {
-    
-    for (i in 1:(n-1)) {
-      
-      x <- do.call("c", x)
-      
-      
-      
-    }
-    
-    x
-    
-  } else {
-    
-    x 
-    
-  }
-  
-  
-  
-  
-}
+	function (x) {
+
+		n <- 0
+		x. <- x
+		# check how often the list has to be "unlisted" by the c function
+		# n gives the number of do.calls of c until there's one component that is not any more a list.
+		while (length(names(x.))==0) {
+			x. <- do.call("c", x.)
+			n <- n + 1
+		}
+		
+		# if n is greater than 1 do.call c n-1 times to get the required list
+		if (n>1) {
+			for (i in 1:(n-1)) {
+				x <- do.call("c", x)
+			}
+			return(x)
+		} else {
+			return(x)
+		}
+	}
+		
+		
+		
+		

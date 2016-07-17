@@ -9,7 +9,8 @@
 ##' @return A data frame with a row for each district and columns with the following variables describing the district:\cr districtList.district*.districtId,\cr districtList.district*.name,\cr districtList.district*.officeId,\cr districtList.district*.stateId.
 ##' @references http://api.votesmart.org/docs/District.html\cr
 ##' See http://api.votesmart.org/docs/semi-static.html for a list of office IDs or use Office.getOfficesByType(), Office.getOfficesByLevel(), Office.getOfficesByTypeLevel() or Office.getOfficesByBranchLevel().\cr
-##' Use State.getStateIDs() to get a list of state IDs.
+##' Use State.getStateIDs() to get a list of state IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -30,115 +31,109 @@
 
 
 District.getByOfficeState <-
-function (officeId, stateId, districtName=NULL, all=FALSE) {
-  
-    if (length(districtName)==0) {
-      # internal function
-District.getByOfficeState.basic1 <- function (.officeId, .stateId) {
-  
-request <-  "District.getByOfficeState?"
-inputs  <-  paste("&officeId=",.officeId,"&stateId=",.stateId,sep="")
-output  <-  pvsRequest(request,inputs)
-output$officeId <- .officeId
-output$stateId <- .stateId
-output
+	function (officeId, stateId, districtName=NULL, all=FALSE) {
+		
+		if (!all) {
+			nstateId <- length(stateId) 
+			nofficeId <- length(officeId) 
+			samelength <- nstateId == nofficeId
+			
+			if (!samelength) {
+				stop(paste0("If all=FALSE, stateId and officeTypeId must have the same length.\n",
+							"stateId has length: ", nstateId, "\nofficeId has length: ", nofficeId))
+			}
+		}
+		
+		
+		if (length(districtName)==0) {
+			# internal function
+			District.getByOfficeState.basic1 <- 
+				function (.officeId, .stateId) {
+					
+					request <-  "District.getByOfficeState?"
+					inputs  <-  paste("&officeId=",.officeId,"&stateId=",.stateId,sep="")
+					output  <-  pvsRequest(request,inputs)
+					output$officeId <- .officeId
+					output$stateId <- .stateId
+					return(output)
+			}
+			
+			
+			if (all==TRUE) {
+				
+				# Main function  
+				output.list <- lapply(officeId, FUN= function (y) {
+					lapply(stateId, FUN= function (s) {
+						District.getByOfficeState.basic1(.officeId=y, .stateId=s)
+					}
+					)
+				}
+				)
 
-}
-  
+			} else {
+				
+				# Main function  
+				reqdf <- data.frame(o=unlist(officeId), s=unlist(stateId), stringsAsFactors = FALSE)
+				output.list <- lapply(1:dim(reqdf)[1], FUN= function (l) {
+					District.getByOfficeState.basic1(.stateId=reqdf[l,"s"], .officeId=reqdf[l,"o"])
+					
+				})
+				
+			}
+			
+			output.list <- redlist(output.list)
+			output <- rbind_all(output.list)
 
-if (all==TRUE) {
+		} else {
+			
+			# internal function
+			District.getByOfficeState.basic2 <- 
+				function (.officeId, .stateId, .districtName) {
+					
+					request <-  "District.getByOfficeState?"
+					inputs  <-  paste("&officeId=",.officeId,"&stateId=",.stateId, "&districtName=", .districtName, sep="")
+					output  <-  pvsRequest(request,inputs)
+					output$officeId <- .officeId
+					output$stateId <- .stateId
+					output$districtName.input <- .districtName
+					
+					return(output)
+			}
+			
+			
+			if (all==TRUE) {
 
-# Main function  
+				# Main function  
+				output.list <- lapply(officeId, FUN= function (y) {
+					lapply(stateId, FUN= function (s) {
+						lapply(districtName, FUN= function (c) {
+							District.getByOfficeState.basic2(.officeId=y, .stateId=s, .districtName=c)
+						}
+						)
+					}
+					)
+				}
+				)
 
-  output.list <- lapply(officeId, FUN= function (y) {
-    lapply(stateId, FUN= function (s) {
-      District.getByOfficeState.basic1(.officeId=y, .stateId=s)
-           }
-        )
-    }
-  )
-  
-  
-} else {
-  
-  # Main function  
-  
-  reqdf <- data.frame(o=unlist(officeId), s=unlist(stateId))
-  
-  output.list <- lapply(1:dim(reqdf)[1], FUN= function (l) {
-    
-    District.getByOfficeState.basic1(.stateId=reqdf[l,"s"], .officeId=reqdf[l,"o"])
-    
-  })
-  
-}
-
-output.list <- redlist(output.list)
-
-
-output <- dfList(output.list)
-
-      
-    } else {
-      
-# internal function
-District.getByOfficeState.basic2 <- function (.officeId, .stateId, .districtName) {
-  
-request <-  "District.getByOfficeState?"
-inputs  <-  paste("&officeId=",.officeId,"&stateId=",.stateId, "&districtName=", .districtName, sep="")
-output  <-  pvsRequest(request,inputs)
-output$officeId <- .officeId
-output$stateId <- .stateId
-output$districtName.input <- .districtName
-output
-
-}
-  
-
-if (all==TRUE) {
-  
-
-# Main function  
-
-  output.list <- lapply(officeId, FUN= function (y) {
-    lapply(stateId, FUN= function (s) {
-      lapply(districtName, FUN= function (c) {
-       District.getByOfficeState.basic2(.officeId=y, .stateId=s, .districtName=c)
-              }
-             )
-           }
-        )
-    }
-  )
-  
-  
-} else {
-  
-  # Main function  
-  
-  reqdf <- data.frame(o=unlist(officeId), s=unlist(stateId), n=unlist(districtName))
-  
-  output.list <- lapply(1:dim(reqdf)[1], FUN= function (l) {
-    
-    District.getByOfficeState.basic2(.stateId=reqdf[l,"s"], .officeId=reqdf[l,"o"], .districtName=reqdf[l,"n"])
-    
-  })
-  
-}
-
-output.list <- redlist(output.list)
-
-output <- dfList(output.list)
-
-# Avoids, that output is missleading, because districtName is already given in request-output, but also a
-# additionally generated (as districtName.input). Problem exists because some request-outputs might be empty
-# and therefore only contain one "districtName" whereas the non-empty ones contain two. (see basic function)
-output$districtName[c(as.vector(is.na(output$districtName)))] <- output$districtName.input[as.vector(is.na(output$districtName))]
-output$districtName.input <- NULL
-
-}
-   
-
-output
-
-}
+			} else {
+				
+				# Main function  
+				reqdf <- data.frame(o=unlist(officeId), s=unlist(stateId), n=unlist(districtName), stringsAsFactors = FALSE)
+				output.list <- lapply(1:dim(reqdf)[1], FUN= function (l) {
+					District.getByOfficeState.basic2(.stateId=reqdf[l,"s"], .officeId=reqdf[l,"o"], .districtName=reqdf[l,"n"])
+				})
+				
+			}
+			
+			output.list <- redlist(output.list)
+			output <- rbind_all(output.list)
+			
+			# Avoids, that output is missleading, because districtName is already given in request-output, but also a
+			# additionally generated (as districtName.input). Problem exists because some request-outputs might be empty
+			# and therefore only contain one "districtName" whereas the non-empty ones contain two. (see basic function)
+			output$districtName[c(as.vector(is.na(output$districtName)))] <- output$districtName.input[as.vector(is.na(output$districtName))]
+			output$districtName.input <- NULL
+			
+		}
+		return(output)
+	}

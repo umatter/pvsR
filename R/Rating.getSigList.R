@@ -7,7 +7,8 @@
 ##' @return A data frame with a row for each special interest group and columns with the following variables describing the special interest group:\cr sigs.sig*.sigId,\cr sigs.sig*.parentId,\cr sigs.sig*.name.
 ##' @references http://api.votesmart.org/docs/Rating.html\cr
 ##' Use State.getStateIDs() to get a list of state IDs.\cr
-##' Use Rating.getCategories() or Rating.getCandidateRating() to get category IDs.
+##' Use Rating.getCategories() or Rating.getCandidateRating() to get category IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -20,40 +21,32 @@
 
 
 Rating.getSigList <-
-function (stateId="NA", categoryId) {
-  
-  
-  # internal function
-  Rating.getSigList.basic <- function (.stateId, .categoryId) {
-    
-    request <-  "Rating.getSigList?"
-    inputs  <-  paste("&stateId=",.stateId,"&categoryId=",.categoryId,sep="")
-    output  <-  pvsRequest4(request,inputs)
-    output$stateId <- .stateId
-    output$categoryId <- .categoryId
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(stateId, FUN= function (y) {
-    lapply(categoryId, FUN= function (s) {
-      Rating.getSigList.basic(.stateId=y, .categoryId=s)
-    }
-           )
-  }
-                        )
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (stateId="NA", categoryId) {
+		# internal function
+		Rating.getSigList.basic <- 
+			function (.stateId, .categoryId) {
+				
+				request <-  "Rating.getSigList?"
+				inputs  <-  paste("&stateId=",.stateId,"&categoryId=",.categoryId,sep="")
+				output  <-  pvsRequest4(request,inputs)
+				output$stateId <- .stateId
+				output$categoryId <- .categoryId
+				
+				return(output)
+			}
+		
+		
+		# Main function  
+		output.list <- lapply(stateId, FUN= function (y) {
+			lapply(categoryId, FUN= function (s) {
+				Rating.getSigList.basic(.stateId=y, .categoryId=s)
+			}
+			)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		return(output)
+	}

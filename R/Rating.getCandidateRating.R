@@ -7,7 +7,8 @@
 ##' @return A data frame with a row for each rating of a candidate and columns with the following variables describing the candidate:\cr candidateRating.candidate.title,\cr candidateRating.candidate.firstName,\cr candidateRating.candidate.middleName,\cr candidateRating.candidate.lastName,\cr candidateRating.candidate.suffix,\cr candidateRating.candidate.office,\cr candidateRating.rating*.sigId,\cr candidateRating.rating*.ratingId,\cr candidateRating.rating*.categories.category*.categoryId,\cr candidateRating.rating*.categories.category*.name,\cr candidateRating.rating*.timeSpan,\cr candidateRating.rating*.rating,\cr candidateRating.rating*.ratingName,\cr candidateRating.rating*.ratingText.
 ##' @references http://api.votesmart.org/docs/Rating.html\cr
 ##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.\cr
-##' Use Rating.getSigList() to get a list of special interest group's IDs.
+##' Use Rating.getSigList() to get a list of special interest group's IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -19,76 +20,57 @@
 
 
 
-
-
-
 Rating.getCandidateRating <-
-function (candidateId, sigId=NULL) {
-  
-  if (length(sigId)==0) {
-    
-    # internal function
-    Rating.getCandidateRating.basic1 <- function (.candidateId) {
-      
-      request <-  "Rating.getCandidateRating?"
-      inputs  <-  paste("&candidateId=",.candidateId,sep="")
-      output  <-  pvsRequest6.1b(request,inputs)
-      output$candidateId <- .candidateId
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(candidateId, FUN= function (y) {
-      
-        Rating.getCandidateRating.basic1(.candidateId=y)
-      
-      
-    }
-    )  
-    
-    
-    
-    
-    
-  } else {
-  
-  # internal function
-  Rating.getCandidateRating.basic2 <- function (.candidateId, .sigId) {
-    
-    request <-  "Rating.getCandidateRating?"
-    inputs  <-  paste("&candidateId=",.candidateId,"&sigId=",.sigId,sep="")
-    output  <-  pvsRequest6.1b(request,inputs)
-    output$candidateId <- .candidateId
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(candidateId, FUN= function (y) {
-    lapply(sigId, FUN= function (s) {
-      Rating.getCandidateRating.basic2(.candidateId=y, .sigId=s)
-    }
-           )
-  }
-                        )
-  
-  
-  
-  }
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (candidateId, sigId=NULL) {
+		
+		if (length(sigId)==0) {
+			
+			# internal function
+			Rating.getCandidateRating.basic1 <- 
+				function (.candidateId) {
+					
+					
+					request <-  "Rating.getCandidateRating?"
+					inputs  <-  paste("&candidateId=",.candidateId,sep="")
+					output  <-  pvsRequest6.1b(request,inputs)
+					output$candidateId <- .candidateId
+					
+					return(output)
+				}
+			
+			
+			# Main function  
+			output.list <- lapply(candidateId, FUN= function (y) {
+				Rating.getCandidateRating.basic1(.candidateId=y)
+			}
+			)  
+			
+		} else {
+			
+			# internal function
+			Rating.getCandidateRating.basic2 <- 
+				function (.candidateId, .sigId) {
+
+					request <-  "Rating.getCandidateRating?"
+					inputs  <-  paste("&candidateId=",.candidateId,"&sigId=",.sigId,sep="")
+					output  <-  pvsRequest6.1b(request,inputs)
+					output$candidateId <- .candidateId
+					
+					return(output)
+				}
+
+			# Main function  
+			output.list <- lapply(candidateId, FUN= function (y) {
+				lapply(sigId, FUN= function (s) {
+					Rating.getCandidateRating.basic2(.candidateId=y, .sigId=s)
+				}
+				)
+			}
+			)
+			}
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+
+		return(output)
+		}

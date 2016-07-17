@@ -18,40 +18,34 @@
 ##' @export
 
 Officials.getByOfficeState <-
-function (stateId="NA", officeId) {
-  
-  
-  # internal function
-  Officials.getByOfficeState.basic <- function (.stateId, .officeId) {
-    
-    request <-  "Officials.getByOfficeState?"
-    inputs  <-  paste("&stateId=",.stateId,"&officeId=",.officeId,sep="")
-    output  <-  pvsRequest4(request,inputs)
-    output$stateId <- .stateId
-    output$officeId <- .officeId
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(stateId, FUN= function (y) {
-    lapply(officeId, FUN= function (s) {
-      Officials.getByOfficeState.basic(.stateId=y, .officeId=s)
-    }
-           )
-  }
-                        )
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (stateId="NA", officeId) {
+
+		# internal function
+		Officials.getByOfficeState.basic <- 
+			function (.stateId, .officeId) {
+			
+			request <-  "Officials.getByOfficeState?"
+			inputs  <-  paste("&stateId=",.stateId,"&officeId=",.officeId,sep="")
+			output  <-  pvsRequest4(request,inputs)
+			output$stateId <- .stateId
+			output$officeId <- .officeId
+			
+			return(output)
+			}
+		
+		
+		# Main function  
+		output.list <- lapply(stateId, FUN= function (y) {
+			lapply(officeId, FUN= function (s) {
+				Officials.getByOfficeState.basic(.stateId=y, .officeId=s)
+			}
+			)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+
+		return(output)
+	}
+

@@ -5,7 +5,8 @@
 ##' @param stateId a character string or list of character strings with the state ID(s) (see references for details)
 ##' @return A data frame with a row for each county and columns with the following variables describing the county:\cr counties.county*.localId,\cr counties.county*.name,\cr counties.county*.url.
 ##' @references http://api.votesmart.org/docs/Local.html\cr
-##' Use State.getStateIDs() to get a list of state IDs.
+##' Use State.getStateIDs() to get a list of state IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -18,42 +19,33 @@
 
 
 Local.getCounties <-
-function (stateId) {
+	function (stateId) {
+		
+		# internal function
+		Local.getCounties.basic <- 
+			function (.stateId) {
+				request <-  "Local.getCounties?"
+				inputs  <-  paste("&stateId=",.stateId, sep="")
+				output  <-  pvsRequest4(request,inputs)
+				output$stateId <-.stateId
+				
+				return(output)
+			}
 
-  
-# internal function
-Local.getCounties.basic <- function (.stateId) {
-  
-request <-  "Local.getCounties?"
-inputs  <-  paste("&stateId=",.stateId, sep="")
-output  <-  pvsRequest4(request,inputs)
-output$stateId <-.stateId
-output
-
-}
-
-
-  # Main function
-  output.list <- lapply(stateId, FUN= function (b) {
-    
-      Local.getCounties.basic(.stateId=b)
-           
-        
-    }
-  )
-
-output.list <- redlist(output.list)
-
-
-output <- dfList(output.list)
-
-if(class(output)=="data.frame") {
-  
-  output
-  
-}
-
-
-
-
-}
+		# Main function
+		output.list <- lapply(stateId, FUN= function (b) {
+			Local.getCounties.basic(.stateId=b)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		if ("data.frame" %in% class(output)) {
+			return(output)
+		}
+	}
+		
+		
+		
+		

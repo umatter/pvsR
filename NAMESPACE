@@ -68,5 +68,5 @@ export(getAllDistricts)
 export(getAllLocalOfficials)
 export(getAllVotes)
 export(getOffices)
-import(XML, httr, nnet)
+import(XML, httr, nnet, dplyr)
 

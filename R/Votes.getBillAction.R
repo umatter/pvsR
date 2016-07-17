@@ -5,7 +5,8 @@
 ##' @param actionId a character string or list of character strings with the action ID(s) (see references for details)
 ##' @return A data frame with a row for each action and columns with the following variables describing the action:\cr action.billId,\cr action.billNumber,\cr action.actionId,\cr action.category,\cr action.categoryId,\cr action.type,\cr action.stateId,\cr action.level,\cr action.stage,\cr action.outcome,\cr action.rollNumber,\cr action.yea,\cr action.nay,\cr action.voiceVote,\cr action.title,\cr action.officialTitle,\cr action.highlight,\cr action.synopsis,\cr action.officialSynopsis,\cr action.note.
 ##' @references http://api.votesmart.org/docs/Votes.html\cr
-##' Use Votes.getBill() or Votes.getByOfficial() to get a list of action IDs.
+##' Use Votes.getBill() or Votes.getByOfficial() to get a list of action IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -18,42 +19,35 @@
 
 
 Votes.getBillAction <-
-function (actionId) {
-  
- 
-# internal function
-Votes.getBillAction.basic <- function (.actionId) {
-  
-request <-  "Votes.getBillAction?"
-inputs  <-  paste("&actionId=",.actionId, sep="")
-output  <-  pvsRequest(request,inputs)
-output$actionId <- .actionId
-output
+	function (actionId) {
 
-}
+		# internal function
+		Votes.getBillAction.basic <- 
+			function (.actionId) {
+				
+				request <-  "Votes.getBillAction?"
+				inputs  <-  paste("&actionId=",.actionId, sep="")
+				output  <-  pvsRequest(request,inputs)
+				output$actionId <- .actionId
+				
+				return(output)
+			}
 
+		
+		# Main function  
+		output.list <- lapply(actionId, FUN= function (b) {
+			Votes.getBillAction.basic(.actionId=b)
+		}
+		)
+		
+		output.list2 <- lapply(output.list, FUN=function (x){
+			varnames <- names(x) 
+			varnames.clean <- gsub(pattern=".text", replacement="", x=varnames, fixed=TRUE)
+			names(x) <- varnames.clean
+			x
+		})
+		
+		output <- bind_rows(redlist(output.list2))
+		return(output)
+	}
 
-
-# Main function  
-
-output.list <- lapply(actionId, FUN= function (b) {
-    
-      Votes.getBillAction.basic(.actionId=b)
-              
-    }
-  )
-
-output.list2 <- lapply(output.list, FUN=function (x){
-  
-  varnames <- names(x) 
-  varnames.clean <- gsub(pattern=".text", replacement="", x=varnames, fixed=TRUE)
-  names(x) <- varnames.clean
-  x
-  
-})
-
-output <- dfList(redlist(output.list2))
-output
-
-
-}

@@ -5,7 +5,8 @@
 ##' @param committeeId a character string or list of character strings with the committee ID(s) (see references for details)
 ##' @return A data frame with a row for each committee member and columns with the following variables describing the committee member:\cr committeeMembers.committee.committeeId,\cr committeeMembers.committee.parentId,\cr committeeMembers.committee.name,\cr committeeMembers.member*.candidateId,\cr committeeMembers.member*.title,\cr committeeMembers.member*.firstName,\cr committeeMembers.member*.middleName,\cr committeeMembers.member*.lastName,\cr committeeMembers.member*.suffix,\cr committeeMembers.member*.party,\cr committeeMembers.member*.position.
 ##' @references http://api.votesmart.org/docs/Committee.html\cr
-##' Use CandidateBio.getBio(), Committee.getCommitteesByTypeState() or Votes.getBill() to get committee ID(s).
+##' Use CandidateBio.getBio(), Committee.getCommitteesByTypeState() or Votes.getBill() to get committee ID(s).\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -17,56 +18,43 @@
 
 
 Committee.getCommitteeMembers <-
-function (committeeId) {
+	function (committeeId) {
 
-  
-#internal function:
-Committee.getCommitteeMembers.basic <- function (.committeeId) {
-  
-request <-  "Committee.getCommitteeMembers?"
-inputs  <-  paste("&committeeId=",.committeeId, sep="")
+		#internal function:
+		Committee.getCommitteeMembers.basic <- 
+			function(.committeeId) {
 
-pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				request <-  "Committee.getCommitteeMembers?"
+				inputs  <-  paste("&committeeId=",.committeeId, sep="")
+				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				doc <- xmlTreeParse(pvs.url)
+				a <- xmlRoot(doc)
+				
+				if (length(a)==1 && names(a[1])=="errorMessage") {
+					warning(gsub(pattern="&", replacement=" ", x=paste("No data available for: ", inputs,". The corresponding rows in the data frame are filled with NAs.", sep=""), fixed=TRUE), call.=FALSE)
+					output.df <- data.frame("committeeId"=as.character(.committeeId), stringsAsFactors = FALSE)
+				
+					} else {
+					items <- getNodeSet(a, path="//member")
+					output.items <- lapply(items, function(x) data.frame(t(unlist(xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE))
+					output.items.df <- rbind_all(output.items)
+					output.base.df <- data.frame(t(xmlSApply(a[[2]], xmlValue)), stringsAsFactors = FALSE)
+					output.df <- merge(output.base.df, output.items.df)
+				}
+				return(output.df)
+			}
+		
+		# Main function 
+		output.list <- lapply(committeeId, FUN= function (b) {
+			Committee.getCommitteeMembers.basic(.committeeId=b)
+		}
+		)
+		if (length(output.list)>1) {
+			output <- rbind_all(output.list)
+		} else {
+			output <- as.tbl(output.list[[1]])
+		}
+		
+		return(output)
+	}
 
-doc <- xmlTreeParse(pvs.url)
-a <- xmlRoot(doc)
-
-if (length(a)==1 && names(a[1])=="errorMessage") {
-  output.items.df <- data.frame("committeeId"=.committeeId)
-} else {
-
-items <- getNodeSet(a, path="//member")
-
-
-output.items <- lapply(items, function(x) data.frame(t(xmlSApply(x, xmlValue))))
-
-
-output.items.df <- do.call("rbind", output.items)
-output.base.df <- data.frame(t(xmlSApply(a[[2]], xmlValue)))
-output.df <- merge(output.base.df, output.items.df)
-
-
-}
-output.df
-
-}
-
-
-
-  # Main function 
-  output.list <- lapply(committeeId, FUN= function (b) {
-    
-      Committee.getCommitteeMembers.basic(.committeeId=b)
-           
-        
-    }
-  )
-
-
-
-
-output <- do.call("rbind", output.list)
-
-output
-
-}

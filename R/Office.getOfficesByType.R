@@ -5,7 +5,8 @@
 ##' @param officeTypeId a character string or list of character strings with the office type ID(s) (see references for details)
 ##' @return A data frame with a row for each office and columns with the following variables describing the office:\cr offices.office*.officeId,\cr offices.office*.officeTypeId,\cr offices.office*.officeLevelId,\cr offices.office*.officeBranchId,\cr offices.office*.name,\cr offices.office*.title,\cr offices.office*.shortTitle.
 ##' @references http://api.votesmart.org/docs/Office.html\cr
-##' See http://api.votesmart.org/docs/semi-static.html or use Office.getTypes() or Office.getOfficesByLevel() to get a list of office types ID(s). 
+##' See http://api.votesmart.org/docs/semi-static.html or use Office.getTypes() or Office.getOfficesByLevel() to get a list of office types ID(s). \cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -17,37 +18,28 @@
 
 
 Office.getOfficesByType <-
-function (officeTypeId) {
-  
-  
-  # internal function
-  Office.getOfficesByType.basic <- function (.officeTypeId) {
-    
-    request <-  "Office.getOfficesByType?"
-    inputs  <-  paste("&officeTypeId=",.officeTypeId,sep="")
-    output  <-  pvsRequest4(request,inputs)
-    
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(officeTypeId, FUN= function (s) {
-    Office.getOfficesByType.basic(.officeTypeId=s)
-  }
-                        )
-  
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (officeTypeId) {
+
+		# internal function
+		Office.getOfficesByType.basic <- 
+			function (.officeTypeId) {
+				
+				request <-  "Office.getOfficesByType?"
+				inputs  <-  paste("&officeTypeId=",.officeTypeId,sep="")
+				output  <-  pvsRequest4(request,inputs)
+				
+				return(output)
+			}
+
+		# Main function  
+		output.list <- lapply(officeTypeId, FUN= function (s) {
+			Office.getOfficesByType.basic(.officeTypeId=s)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+
+		return(output)
+		}
+

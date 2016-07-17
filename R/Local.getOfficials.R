@@ -5,7 +5,8 @@
 ##' @param localId a character string or list of character strings with the local ID(s) (see references for details)
 ##' @return A data frame with a row for each official and columns with the following variables describing the official:\cr candidatelist.candidate*.candidateId,\cr candidatelist.candidate*.firstName,\cr candidatelist.candidate*.nickName,\cr candidatelist.candidate*.middleName,\cr candidatelist.candidate*.lastName,\cr candidatelist.candidate*.suffix,\cr candidatelist.candidate*.title,\cr candidatelist.candidate*.electionParties,\cr candidatelist.candidate*.electionDistrictId,\cr candidatelist.candidate*.electionStateId,\cr candidatelist.candidate*.officeParties,\cr candidatelist.candidate*.officeDistrictId,\cr candidatelist.candidate*.officeDistrictName,\cr candidatelist.candidate*.officeStateId,\cr candidatelist.candidate*.officeId,\cr candidatelist.candidate*.officeName,\cr candidatelist.candidate*.officeTypeId.
 ##' @references http://api.votesmart.org/docs/Local.html\cr
-##' Use Local.getCounties() or Local.getCities() to get a list of local IDs. 
+##' Use Local.getCounties() or Local.getCities() to get a list of local IDs. \cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -17,40 +18,32 @@
 
 
 Local.getOfficials <-
-function (localId) {
+	function (localId) {
 
-  
-# internal function
-Local.getOfficials.basic <- function (.localId) {
-  
-request <-  "Local.getOfficials?"
-inputs  <-  paste("&localId=",.localId, sep="")
-output  <-  pvsRequest4(request,inputs)
-output$localId <-.localId
-output
+		# internal function
+		Local.getOfficials.basic <- 
+			function (.localId) {
+				
+				request <-  "Local.getOfficials?"
+				inputs  <-  paste("&localId=",.localId, sep="")
+				output  <-  pvsRequest4(request,inputs)
+				output$localId <-.localId
+				
+				return(output)
+			}
+		
+		# Main function
+		output.list <- lapply(localId, FUN= function (b) {
+			Local.getOfficials.basic(.localId=b)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		if ("data.frame" %in% class(output)) {
+			return(output)
+		}
+	}
+		
 
-}
-
-
-  # Main function
-  output.list <- lapply(localId, FUN= function (b) {
-    
-      Local.getOfficials.basic(.localId=b)
-           
-        
-    }
-  )
-
-output.list <- redlist(output.list)
-
-
-output <- dfList(output.list)
-
-if(class(output)=="data.frame") {
-  
-  output
-  
-}
-
-
-}

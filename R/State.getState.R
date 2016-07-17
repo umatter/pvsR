@@ -5,7 +5,8 @@
 ##' @param stateId a character string or list of character strings with the state ID(s) (see references for details)
 ##' @return A data frame with a row for each state and columns with the following variables describing the state:\cr state.details.stateId,\cr state.details.stateType,\cr state.details.name,\cr state.details.nickName,\cr state.details.capital,\cr state.details.area,\cr state.details.population,\cr state.details.statehood,\cr state.details.motto,\cr state.details.flower,\cr state.details.tree,\cr state.details.bird,\cr state.details.highPoint,\cr state.details.lowPoint,\cr state.details.bicameral,\cr state.details.upperLegis,\cr state.details.lowerLegis,\cr state.details.ltGov,\cr state.details.senators,\cr state.details.reps,\cr state.details.termLimit,\cr state.details.termLength,\cr state.details.billUrl,\cr state.details.voteUrl,\cr state.details.voterReg,\cr state.details.primaryDate,\cr state.details.generalDate,\cr state.details.absenteeWho,\cr state.details.absenteeHow,\cr state.details.absenteeWhen,\cr state.details.largestCity,\cr state.details.rollUpper,\cr state.details.rollLower,\cr state.details.usCircuit.
 ##' @references http://api.votesmart.org/docs/State.html\cr
-##' Use State.getStateIDs() to get a list of state IDs.
+##' Use State.getStateIDs() to get a list of state IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -18,39 +19,29 @@
 
 
 
-
 State.getState <-
-function (stateId) {
-  
-  
-  # internal function
-  State.getState.basic <- function (.stateId) {
-    
-    request <-  "State.getState?"
-    inputs  <-  paste("&stateId=",.stateId,sep="")
-    output  <-  pvsRequest4(request,inputs)
-    output$stateId <- .stateId
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(stateId, FUN= function (s) {
-    State.getState.basic(.stateId=s)
-  }
-                        )
-  
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (stateId) {
+
+		# internal function
+		State.getState.basic <- 
+			function (.stateId) {
+
+				request <-  "State.getState?"
+				inputs  <-  paste("&stateId=",.stateId,sep="")
+				output  <-  pvsRequest4(request,inputs)
+				output$stateId <- .stateId
+				
+				return(output)
+			}
+
+		# Main function  
+		output.list <- lapply(stateId, FUN= function (s) {
+			State.getState.basic(.stateId=s)
+		}
+		)
+
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+
+		return(output)
+	}

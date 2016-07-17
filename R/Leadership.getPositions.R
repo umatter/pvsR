@@ -7,7 +7,8 @@
 ##' @return A data frame with a row for each leadership position and columns with the following variables describing the position:\cr leadership.position*.leadershipId,\cr leadership.position*.name,\cr leadership.position*.officeId,\cr leadership.position*.officeName.
 ##' @references http://api.votesmart.org/docs/Leadership.html\cr
 ##' Use State.getStateIDs() to get a list of state IDs.\cr
-##' See http://api.votesmart.org/docs/semi-static.html for a list of office IDs or use Office.getOfficesByType(), Office.getOfficesByLevel(), Office.getOfficesByTypeLevel() or Office.getOfficesByBranchLevel() to get a list of office ID(s).
+##' See http://api.votesmart.org/docs/semi-static.html for a list of office IDs or use Office.getOfficesByType(), Office.getOfficesByLevel(), Office.getOfficesByTypeLevel() or Office.getOfficesByBranchLevel() to get a list of office ID(s).\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -20,83 +21,63 @@
 
 
 Leadership.getPositions <-
-function (stateId="NA", officeId=NULL) {
-  
-  if (length(officeId)==0) {
-    # internal function
-    Leadership.getPositions.basic1 <- function (.stateId) {
-      
-      request <-  "Leadership.getPositions?"
-      inputs  <-  paste("&stateId=",.stateId,sep="")
-      output  <-  pvsRequest4(request,inputs)
-      output$stateId <- .stateId
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(stateId, FUN= function (s) {
-      Leadership.getPositions.basic1(.stateId=s)
-    }
-                          )
-    
-    
-    output.list <- redlist(output.list)
-    
-    
-    output <- dfList(output.list)
-    
-    
-  } else {
-    
-    # internal function
-    Leadership.getPositions.basic2 <- function (.stateId, .officeId) {
-      
-      request <-  "Leadership.getPositions?"
-      inputs  <-  paste("&stateId=",.stateId, "&officeId=", .officeId, sep="")
-      output  <-  pvsRequest4(request,inputs)
-      output$stateId <- .stateId
-      output$officeId.input <- .officeId
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(stateId, FUN= function (s) {
-      lapply(officeId, FUN= function (c) {
-        Leadership.getPositions.basic2( .stateId=s, .officeId=c)
-      }
-             )
-    }
-                          )
-    
-    
-    
-    output.list <- redlist(output.list)
-    
-    output <- dfList(output.list)
-    
-    
-    # Avoids, that output is missleading, because officeId is already given in request-output, but also a
-    # additionally generated (as officeId.input). Problem exists because some request-outputs might be empty
-    # and therefore only contain one "officeId" whereas the non-empty ones contain two. (see basic function)
-    output$officeId[c(as.vector(is.na(output$officeId)))] <- output$officeId.input[as.vector(is.na(output$officeId))]
-    output$officeId.input <- NULL
-    
-    
-    
-  }
-  
-  
-  
-  
-  
-  output
-  
-  
-  
-}
+	function (stateId="NA", officeId=NULL) {
+		
+		if (length(officeId)==0) {
+			
+			# internal function
+			Leadership.getPositions.basic1 <- 
+				function (.stateId) {
+					
+					request <-  "Leadership.getPositions?"
+					inputs  <-  paste("&stateId=",.stateId,sep="")
+					output  <-  pvsRequest4(request,inputs)
+					output$stateId <- .stateId
+					
+					return(output)
+			}
+			
+			
+			# Main function  
+			output.list <- lapply(stateId, FUN= function (s) {
+				Leadership.getPositions.basic1(.stateId=s)
+			}
+			)
+			
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+
+		} else {
+			
+			# internal function
+			Leadership.getPositions.basic2 <- 
+				function (.stateId, .officeId) {
+					
+					request <-  "Leadership.getPositions?"
+					inputs  <-  paste("&stateId=",.stateId, "&officeId=", .officeId, sep="")
+					output  <-  pvsRequest4(request,inputs)
+					output$stateId <- .stateId
+					output$officeId.input <- .officeId
+					return(output)
+				}
+			
+			# Main function  
+			output.list <- lapply(stateId, FUN= function (s) {
+				lapply(officeId, FUN= function (c) {
+					Leadership.getPositions.basic2( .stateId=s, .officeId=c)
+				}
+				)
+			}
+			)
+			
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+			
+			# Avoids that output is missleading, because officeId is already given in request-output, but also a
+			# additionally generated (as officeId.input). Problem exists because some request-outputs might be empty
+			# and therefore only contain one "officeId" whereas the non-empty ones contain two. (see basic function)
+			output$officeId[c(as.vector(is.na(output$officeId)))] <- output$officeId.input[as.vector(is.na(output$officeId))]
+			output$officeId.input <- NULL
+		}
+		return(output)
+	}

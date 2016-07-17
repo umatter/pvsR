@@ -7,7 +7,8 @@
 ##' @return A data frame with a row for each leadership position and columns with the following variables describing the official:\cr leaders.leader*.candidateId,\cr leaders.leader*.firstName,\cr leaders.leader*.middleName,\cr leaders.leader*.lastName,\cr leaders.leader*.suffix,\cr leaders.leader*.position,\cr leaders.leader*.officeId,\cr leaders.leader*.title.
 ##' @references http://api.votesmart.org/docs/Leadership.html\cr
 ##' Use State.getStateIDs() to get a list of state IDs.\cr
-##' Use Leadership.getPositions() to get a list of leadership IDs.
+##' Use Leadership.getPositions() to get a list of leadership IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -19,42 +20,34 @@
 
 
 Leadership.getOfficials <-
-function (stateId="NA", leadershipId) {
-  
-  
-  # internal function
-  Leadership.getOfficials.basic <- function (.stateId, .leadershipId) {
-    
-    request <-  "Leadership.getOfficials?"
-    inputs  <-  paste("&stateId=",.stateId,"&leadershipId=",.leadershipId,sep="")
-    output  <-  pvsRequest4(request,inputs)
-    output$stateId <- .stateId
-    output$leadershipId <- .leadershipId
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(stateId, FUN= function (y) {
-    lapply(leadershipId, FUN= function (s) {
-      Leadership.getOfficials.basic(.stateId=y, .leadershipId=s)
-    }
-           )
-    
-  }
-                        
-                        )
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (stateId="NA", leadershipId) {
+
+		# internal function
+		Leadership.getOfficials.basic <- 
+			function (.stateId, .leadershipId) {
+				
+				request <-  "Leadership.getOfficials?"
+				inputs  <-  paste("&stateId=",.stateId,"&leadershipId=",.leadershipId,sep="")
+				output  <-  pvsRequest4(request,inputs)
+				output$stateId <- .stateId
+				output$leadershipId <- .leadershipId
+				output
+			}
+		
+		
+		# Main function  
+		output.list <- lapply(stateId, FUN= function (y) {
+			lapply(leadershipId, FUN= function (s) {
+				Leadership.getOfficials.basic(.stateId=y, .leadershipId=s)
+			}
+			)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		return(output)
+
+		}
+

@@ -6,7 +6,8 @@
 ##' @param zip4 (optional) a character string or list of character strings with the expanded ZIP+4 code (default: NULL)
 ##' @param year a character string or list of character strings with the year (defaults to current year)
 ##' @return A data frame with a row for each election and columns with the following variables describing the election:\cr elections.election*.electionId,\cr elections.election*.name,\cr elections.election*.stateId,\cr elections.election*.officeTypeId,\cr elections.election*.special,\cr elections.election*.electionYear.
-##' @references http://api.votesmart.org/docs/Election.html
+##' @references http://api.votesmart.org/docs/Election.html\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -20,92 +21,69 @@
 
 
 Election.getElectionByZip <-
-function (zip5, zip4=NULL, year=NULL) {
-  
-  if (is.null(year)) year <- substr(Sys.Date(), 1,4)
-  
-  
-  if (length(zip4)==0) {
-    # internal function
-    Election.getElectionByZip.basic1 <- function (.zip5, .year) {
-      
-      request <-  "Election.getElectionByZip?"
-      inputs  <-  paste("&zip5=",.zip5, "&year=", .year, sep="")
-      output  <-  pvsRequest6(request,inputs)
-      output$zip5 <- .zip5
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(zip5, FUN= function (s) {
-      lapply(year, function(y) {
-      Election.getElectionByZip.basic1(.zip5=s, .year=y)
-      }
-      )
-    }
-                          )
-    
-    
-    output.list <- redlist(output.list)
-    
-    
-    output <- dfList(output.list)
-    
-    
-  } else {
-    
-    # internal function
-    Election.getElectionByZip.basic2 <- function (.zip5, .zip4, .year) {
-      
-      request <-  "Election.getElectionByZip?"
-      inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, "&year=", .year, sep="")
-      output  <-  pvsRequest5(request,inputs)
-      output$zip5 <- .zip5
-      output$zip4.input <- .zip4
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(zip5, FUN= function (s) {
-      lapply(zip4, FUN= function (c) {
-        lapply(year, FUN= function(y) { 
-        Election.getElectionByZip.basic2( .zip5=s, .zip4=c, .year=y)
-        }
-        )
-      }
-             )
-    }
-                          )
-    
-    
-    
-    output.list <- redlist(output.list)
-    
-    output <- dfList(output.list)
-    
-    
-    # Avoids, that output is missleading, because zip4 is already given in request-output, but also a
-    # additionally generated (as zip4.input). Problem exists because some request-outputs might be empty
-    # and therefore only contain one "zip4" whereas the non-empty ones contain two. (see basic function)
-    output$zip4[c(as.vector(is.na(output$zip4)))] <- output$zip4.input[as.vector(is.na(output$zip4))]
-    output$zip4.input <- NULL
-    
-    
-    
-  }
-  
-  
-  
-  
-  
-  output
-  
-  
-  
-}
+	function (zip5, zip4=NULL, year=NULL) {
+		
+		if (is.null(year)) year <- substr(Sys.Date(), 1,4)
+		if (length(zip4)==0) {
+			# internal function
+			Election.getElectionByZip.basic1 <- 
+				function (.zip5, .year) {
+
+					request <-  "Election.getElectionByZip?"
+					inputs  <-  paste("&zip5=",.zip5, "&year=", .year, sep="")
+					output  <-  pvsRequest6(request,inputs)
+					output$zip5 <- .zip5
+					return(output)
+			}
+			
+			# Main function  
+			output.list <- lapply(zip5, FUN= function (s) {
+				lapply(year, function(y) {
+					Election.getElectionByZip.basic1(.zip5=s, .year=y)
+				}
+				)
+			}
+			)
+
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+
+		} else {
+			
+			# internal function
+			Election.getElectionByZip.basic2 <- 
+				function (.zip5, .zip4, .year) {
+					
+					request <-  "Election.getElectionByZip?"
+					inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, "&year=", .year, sep="")
+					output  <-  pvsRequest5(request,inputs)
+					output$zip5 <- .zip5
+					output$zip4.input <- .zip4
+					
+					return(output)
+				}
+			
+			# Main function  
+			output.list <- lapply(zip5, FUN= function (s) {
+				lapply(zip4, FUN= function (c) {
+					lapply(year, FUN= function(y) { 
+						Election.getElectionByZip.basic2( .zip5=s, .zip4=c, .year=y)
+					}
+					)
+				}
+				)
+			}
+			)
+
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+			
+			# Avoids that output is missleading, because zip4 is already given in request-output, but also a
+			# additionally generated (as zip4.input). Problem exists because some request-outputs might be empty
+			# and therefore only contain one "zip4" whereas the non-empty ones contain two. (see basic function)
+			output$zip4[c(as.vector(is.na(output$zip4)))] <- output$zip4.input[as.vector(is.na(output$zip4))]
+			output$zip4.input <- NULL
+			}
+		return(output)
+	}
+

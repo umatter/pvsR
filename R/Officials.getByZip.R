@@ -4,7 +4,8 @@
 ##' @usage Officials.getByZip(zip5, zip4=NULL)
 ##' @param zip5 a character string or list of character strings with the five-digit ZIP code
 ##' @param zip4 (optional) a character string or list of character strings with the expanded ZIP+4 code (default: all)
-##' @return A data frame with a row for each official and columns with the following variables describing the official:\cr candidateList.zipMessage,\cr candidateList.candidate*.candidateId,\cr candidateList.candidate*.firstName,\cr candidateList.candidate*.nickName,\cr candidateList.candidate*.middleName,\cr candidateList.candidate*.lastName,\cr candidateList.candidate*.suffix,\cr candidateList.candidate*.title,\cr candidateList.candidate*.electionParties,\cr candidateList.candidate*.electionstatus,\cr candidateList.candidate*.officeParties,\cr candidatelist.candidate*.officeStatus,\cr candidateList.candidate*.officeDistrictId,\cr candidateList.candidate*.officeDistrictName,\cr candidateList.candidate*.officeTypeId,\cr candidateList.candidate*.officeId,\cr candidateList.candidate*.officeName,\cr candidateList.candidate*.officeStateId.
+##' @return A data frame with a row for each official and columns with the following variables describing the official:\cr candidateList.zipMessage,\cr candidateList.candidate*.candidateId,\cr candidateList.candidate*.firstName,\cr candidateList.candidate*.nickName,\cr candidateList.candidate*.middleName,\cr candidateList.candidate*.lastName,\cr candidateList.candidate*.suffix,\cr candidateList.candidate*.title,\cr candidateList.candidate*.electionParties,\cr candidateList.candidate*.electionstatus,\cr candidateList.candidate*.officeParties,\cr candidatelist.candidate*.officeStatus,\cr candidateList.candidate*.officeDistrictId,\cr candidateList.candidate*.officeDistrictName,\cr candidateList.candidate*.officeTypeId,\cr candidateList.candidate*.officeId,\cr candidateList.candidate*.officeName,\cr candidateList.candidate*.officeStateId.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @references http://api.votesmart.org/docs/Officials.html
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
@@ -18,88 +19,65 @@
 
 
 
-
-
-
-
 Officials.getByZip <-
-function (zip5, zip4=NULL) {
-  
-  if (length(zip4)==0) {
-    # internal function
-    Officials.getByZip.basic1 <- function (.zip5) {
-      
-      request <-  "Officials.getByZip?"
-      inputs  <-  paste("&zip5=",.zip5,sep="")
-      output  <-  pvsRequest5(request,inputs)
-      output$zip5 <- .zip5
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(zip5, FUN= function (s) {
-      Officials.getByZip.basic1(.zip5=s)
-    }
-                          )
-    
-    
-    output.list <- redlist(output.list)
-    
-    
-    output <- dfList(output.list)
-    
-    
-  } else {
-    
-    # internal function
-    Officials.getByZip.basic2 <- function (.zip5, .zip4) {
-      
-      request <-  "Officials.getByZip?"
-      inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, sep="")
-      output  <-  pvsRequest4(request,inputs)
-      output$zip5 <- .zip5
-      output$zip4.input <- .zip4
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(zip5, FUN= function (s) {
-      lapply(zip4, FUN= function (c) {
-        Officials.getByZip.basic2( .zip5=s, .zip4=c)
-      }
-             )
-    }
-                          )
-    
-    
-    
-    output.list <- redlist(output.list)
-    
-    output <- dfList(output.list)
-    
-    
-    # Avoids, that output is missleading, because zip4 is already given in request-output, but also a
-    # additionally generated (as zip4.input). Problem exists because some request-outputs might be empty
-    # and therefore only contain one "zip4" whereas the non-empty ones contain two. (see basic function)
-    output$zip4[c(as.vector(is.na(output$zip4)))] <- output$zip4.input[as.vector(is.na(output$zip4))]
-    output$zip4.input <- NULL
-    
-    
-    
-  }
-  
-  
-  
-  
-  
-  output
-  
-  
-  
-}
+	function (zip5, zip4=NULL) {
+		
+		if (length(zip4)==0) {
+			# internal function
+			Officials.getByZip.basic1 <- 
+				function (.zip5) {
+
+					request <-  "Officials.getByZip?"
+					inputs  <-  paste("&zip5=",.zip5,sep="")
+					output  <-  pvsRequest5(request,inputs)
+					output$zip5 <- .zip5
+					
+					return(output)
+				}
+
+			# Main function  
+			output.list <- lapply(zip5, FUN= function (s) {
+				Officials.getByZip.basic1(.zip5=s)
+			}
+			)
+
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+
+		} else {
+			
+			# internal function
+			Officials.getByZip.basic2 <- 
+				function (.zip5, .zip4) {
+					
+					request <-  "Officials.getByZip?"
+					inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, sep="")
+					output  <-  pvsRequest4(request,inputs)
+					output$zip5 <- .zip5
+					output$zip4.input <- .zip4
+					
+					return(output)
+					}
+			
+			
+			# Main function  
+			output.list <- lapply(zip5, FUN= function (s) {
+				lapply(zip4, FUN= function (c) {
+					Officials.getByZip.basic2( .zip5=s, .zip4=c)
+				}
+				)
+			}
+			)
+
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+
+			# Avoids that output is missleading, because zip4 is already given in request-output, but also a
+			# additionally generated (as zip4.input). Problem exists because some request-outputs might be empty
+			# and therefore only contain one "zip4" whereas the non-empty ones contain two. (see basic function)
+			output$zip4[c(as.vector(is.na(output$zip4)))] <- output$zip4.input[as.vector(is.na(output$zip4))]
+			output$zip4.input <- NULL
+		
+			}
+		return(output)
+	}

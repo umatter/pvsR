@@ -9,7 +9,8 @@
 ##' @references http://api.votesmart.org/docs/Votes.html\cr
 ##' Use Votes.getCategories() to get a list of category IDs.\cr
 ##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.\cr
-##' See http://api.votesmart.org/docs/semi-static.html for a list of office IDs or use Office.getOfficesByType(), Office.getOfficesByLevel(), Office.getOfficesByTypeLevel() or Office.getOfficesByBranchLevel().
+##' See http://api.votesmart.org/docs/semi-static.html for a list of office IDs or use Office.getOfficesByType(), Office.getOfficesByLevel(), Office.getOfficesByTypeLevel() or Office.getOfficesByBranchLevel().\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -20,109 +21,70 @@
 ##' @export
 
 
-
-
-
-
 Votes.getBillsByOfficialCategoryOffice <-
-function (categoryId, candidateId, officeId=NULL) {
-  
-    if (length(officeId)==0) {
-      # internal function
-Votes.getBillsByOfficialCategoryOffice.basic1 <- function (.categoryId, .candidateId) {
-  
-request <-  "Votes.getBillsByOfficialCategoryOffice?"
-inputs  <-  paste("&categoryId=",.categoryId,"&candidateId=",.candidateId,sep="")
-output  <-  pvsRequest(request,inputs)
-output$categoryId <- .categoryId
-output$candidateId <- .candidateId
-output
+	function (categoryId, candidateId, officeId=NULL) {
+		if (length(officeId)==0) {
+			# internal function
+			Votes.getBillsByOfficialCategoryOffice.basic1 <- 
+				function (.categoryId, .candidateId) {
+					
+					request <-  "Votes.getBillsByOfficialCategoryOffice?"
+					inputs  <-  paste("&categoryId=",.categoryId,"&candidateId=",.candidateId,sep="")
+					output  <-  pvsRequest(request,inputs)
+					output$categoryId <- .categoryId
+					output$candidateId <- .candidateId
+					
+					return(output)
+				}
+			
+			
+			# Main function  
+			output.list <- lapply(categoryId, FUN= function (y) {
+				lapply(candidateId, FUN= function (s) {
+					Votes.getBillsByOfficialCategoryOffice.basic1(.categoryId=y, .candidateId=s)
+				}
+				)
+			}
+			)
+		
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
 
-}
-  
+		} else {
+			# internal function
+			Votes.getBillsByOfficialCategoryOffice.basic2 <- 
+				function (.categoryId, .candidateId, .officeId) {
 
-# Main function  
+					request <-  "Votes.getBillsByOfficialCategoryOffice?"
+					inputs  <-  paste("&categoryId=",.categoryId,"&candidateId=",.candidateId, "&officeId=", .officeId, sep="")
+					output  <-  pvsRequest(request,inputs)
+					output$categoryId <- .categoryId
+					output$candidateId <- .candidateId
+					output$officeId.input <- .officeId
+					
+					return(output)
+				}
 
-  output.list <- lapply(categoryId, FUN= function (y) {
-    lapply(candidateId, FUN= function (s) {
-      Votes.getBillsByOfficialCategoryOffice.basic1(.categoryId=y, .candidateId=s)
-           }
-        )
-    }
-  )
-
-output.list <- do.call("c",output.list)
-
-
-# which list entry has the most columns, how many are these?
-coln <- which.is.max(sapply(output.list, ncol));
-max.cols <- max(sapply(output.list, ncol));
-
-# give all list entries (dfs in list) the same number of columns and the same names
-output.list2 <- lapply(output.list, function(x){
-if (ncol(x) < max.cols) x <- data.frame(cbind(matrix(NA, ncol=max.cols-ncol(x), nrow = 1, ),x),row.names=NULL)
-names(x) <- names(output.list[[coln]])
-x
-})
-
-output <- do.call("rbind",output.list2)
-      
-      
-    } else {
-# internal function
-Votes.getBillsByOfficialCategoryOffice.basic2 <- function (.categoryId, .candidateId, .officeId) {
-  
-request <-  "Votes.getBillsByOfficialCategoryOffice?"
-inputs  <-  paste("&categoryId=",.categoryId,"&candidateId=",.candidateId, "&officeId=", .officeId, sep="")
-output  <-  pvsRequest(request,inputs)
-output$categoryId <- .categoryId
-output$candidateId <- .candidateId
-output$officeId.input <- .officeId
-output
-
-}
-  
-
-# Main function  
-
-  output.list <- lapply(categoryId, FUN= function (y) {
-    lapply(candidateId, FUN= function (s) {
-      lapply(officeId, FUN= function (c) {
-       Votes.getBillsByOfficialCategoryOffice.basic2(.categoryId=y, .candidateId=s, .officeId=c)
-              }
-             )
-           }
-        )
-    }
-  )
-  
-  
-# reduce lists in list (3fold) to one list
-output.list <- do.call("c",do.call("c", output.list))
-
-
-# which list entry has the most columns, how many are these?
-coln <- which.is.max(sapply(output.list, ncol));
-max.cols <- max(sapply(output.list, ncol));
-
-# give all list entries (dfs in list) the same number of columns and the same names
-output.list2 <- lapply(output.list, function(x){
-if (ncol(x) < max.cols) x <- data.frame(cbind(matrix(NA, ncol=max.cols-ncol(x), nrow = 1, ),x),row.names=NULL)
-names(x) <- names(output.list[[coln]])
-x
-})
-
-output <- do.call("rbind",output.list2) 
-
-# Avoids, that output is missleading, because officeId is already given in request-output, but also a
-# additionally generated (as officeId.input). Problem exists because some request-outputs might be empty
-# and therefore only contain one "officeId" whereas the non-empty ones contain two. (see basic function)
-output$officeId[c(as.vector(is.na(output$officeId)))] <- output$officeId.input[as.vector(is.na(output$officeId))]
-output$officeId.input <- NULL
-
-
-}
-
-output
-
-}
+			# Main function  
+			output.list <- lapply(categoryId, FUN= function (y) {
+				lapply(candidateId, FUN= function (s) {
+					lapply(officeId, FUN= function (c) {
+						Votes.getBillsByOfficialCategoryOffice.basic2(.categoryId=y, .candidateId=s, .officeId=c)
+					}
+					)
+				}
+				)
+			}
+			)
+			
+			output.list <- redlist(output.list)
+			output <- bind_rows(output.list)
+			
+			# Avoids that output is missleading, because officeId is already given in request-output, but also a
+			# additionally generated (as officeId.input). Problem exists because some request-outputs might be empty
+			# and therefore only contain one "officeId" whereas the non-empty ones contain two. (see basic function)
+			output$officeId[c(as.vector(is.na(output$officeId)))] <- output$officeId.input[as.vector(is.na(output$officeId))]
+			output$officeId.input <- NULL
+		}
+		return(output)
+	}

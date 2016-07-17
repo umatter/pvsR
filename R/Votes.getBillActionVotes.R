@@ -17,49 +17,29 @@
 
 
 
-
-
-
 Votes.getBillActionVotes <-
-function (actionId) {
-  
-  
-# internal function
+	
+	function (actionId) {
+		# internal function
+		Votes.getBillActionVotes.basic <- 
+			function (.actionId) {
 
-Votes.getBillActionVotes.basic <- function (.actionId) {
-  
-request <-  "Votes.getBillActionVotes?"
-inputs  <-  paste("&actionId=",.actionId, sep="")
-output  <-  pvsRequest(request,inputs)
-output$actionId  <- .actionId  
-output
+				request <-  "Votes.getBillActionVotes?"
+				inputs  <-  paste("&actionId=",.actionId, sep="")
+				output  <-  pvsRequest(request,inputs)
+				output$actionId  <- .actionId  
+				
+				return(output)
+				}
 
-}
+		# Main function  
+		output.list <- lapply(actionId, FUN= function (b) {
+			Votes.getBillActionVotes.basic(.actionId=b)
+			}
+		)
 
-
-
-# Main function  
-  output.list <- lapply(actionId, FUN= function (b) {
-    
-      Votes.getBillActionVotes.basic(.actionId=b)
-           
-        
-    }
-  )
-
-# which list entry has the most columns, how many are these?
-coln <- which.is.max(sapply(output.list, ncol));
-max.cols <- max(sapply(output.list, ncol));
-
-# give all list entries (dfs in list) the same number of columns and the same names
-output.list2 <- lapply(output.list, function(x){
-if (ncol(x) < max.cols) x <- data.frame(cbind(matrix(NA, ncol=max.cols-ncol(x), nrow = 1, ),x),row.names=NULL)
-names(x) <- names(output.list[[coln]])
-x
-})
-
-output <- do.call("rbind",output.list2)
-output
-
-
-}
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		return(output)
+		}

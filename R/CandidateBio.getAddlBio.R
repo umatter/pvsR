@@ -5,7 +5,8 @@
 ##' @param candidateId a character string or list of character strings with the candidate ID(s) (see references for details)
 ##' @return A data frame with a row for each candidate and columns with the following variables describing the candidate:\cr addlBio.candidate.shortTitle,\cr addlBio.candidate.firstName,\cr addlBio.candidate.nickName,\cr addlBio.candidate.middleName,\cr addlBio.candidate.lastName,\cr addlBio.candidate.suffix,\cr addlBio.additional.item*.name,\cr addlBio.additional.item*.data
 ##' @references http://api.votesmart.org/docs/CandidateBio.html\cr 
-##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.
+##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -21,85 +22,70 @@
 
 
 CandidateBio.getAddlBio <-
-function (candidateId) {
+	function (candidateId) {
+		
+		#internal function:
+		CandidateBio.getAddlBio.basic <- 
+			function (.candidateId) {
+				
+				request <-  "CandidateBio.getAddlBio?"
+				inputs  <-  paste("&candidateId=",.candidateId, sep="")
+				url.base <- "http://api.votesmart.org/"
+				pvs.url <- paste(url.base,request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				
+				doc <- xmlTreeParse(pvs.url)
+				a <- xmlRoot(doc)
+				
+				if (length(a)==1 && names(a[1])=="errorMessage") {
+					output.items.df <- data.frame("candidateId"=.candidateId, stringsAsFactors = FALSE)
+				} else {
+					
+					items <- getNodeSet(a, path="//item")
+					output.items <- lapply(items, function(x) data.frame(t(xmlSApply(x, xmlValue)), stringsAsFactors = FALSE))
+					output.items <- lapply(output.items, function(x) {
+						x. <- data.frame(x["data"], stringsAsFactors = FALSE)
+						names(x.) <- as.character(x[1,"name"])
+						x.
+					}
+					)
 
-  
-#internal function:
-  CandidateBio.getAddlBio.basic <- function (.candidateId) {
-  
-request <-  "CandidateBio.getAddlBio?"
-inputs  <-  paste("&candidateId=",.candidateId, sep="")
-url.base <- "http://api.votesmart.org/"
+					output.items.df <- do.call("cbind", output.items)
+					output.items.df <- data.frame("candidateId"=.candidateId, output.items.df, stringsAsFactors = FALSE)
+				}
+				output.items.df
+			}
+		
 
-pvs.url <- paste(url.base,request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
-
-doc <- xmlTreeParse(pvs.url)
-a <- xmlRoot(doc)
-
-if (length(a)==1 && names(a[1])=="errorMessage") {
-  output.items.df <- data.frame("candidateId"=.candidateId)
-} else {
-
-items <- getNodeSet(a, path="//item")
-
-
-output.items <- lapply(items, function(x) data.frame(t(xmlSApply(x, xmlValue))))
-
-
-output.items <- lapply(output.items, function(x) {
-  x. <- data.frame(x["data"])
-                  names(x.) <- as.character(x[1,"name"])
-                  x.
-                  }
-       )
-
-
-output.items.df <- do.call("cbind", output.items)
-output.items.df <- data.frame("candidateId"=.candidateId, output.items.df)
-}
-output.items.df
-
-}
-
-
-
-  # Main function (here also a special case, see above. the output is a list containing dataframes of each main node. each dataframe is processed separately an then merged to one.)
-  output.list <- lapply(candidateId, FUN= function (b) {
-    
-      CandidateBio.getAddlBio.basic(.candidateId=b)
-           
-        
-    }
-  )
-
-
-
-# extract all possible bio vars 
-
-all.bio.vars <- names(do.call("cbind", output.list))
-
-all.bio.vars <- unique(all.bio.vars)
-
-
-# complete and clean each pm's df with NA's if a var is missing
-output.list2 <- lapply(output.list, FUN=function(x) {
-  for (i in all.bio.vars ) {
-		if ( length(grep(i,names(x), fixed=TRUE))==0 ) {
-			x.names.old <- names(x)
-			x <- data.frame(x,i=NA)
-			names(x) <- c(x.names.old,i)
+		# Main function (here also a special case. the output is a list containing dataframes of each main node. each dataframe is processed separately an then merged to one.)
+		output.list <- lapply(candidateId, FUN= function (b) {
 			
-		} else {
-			x <- x
+			CandidateBio.getAddlBio.basic(.candidateId=b)
 		}
+		)
+
+		
+		# extract all possible bio vars 
+		all.bio.vars <- names(do.call("cbind", output.list))
+		all.bio.vars <- unique(all.bio.vars)
+
+		# complete and clean each pm's df with NA's if a var is missing
+		output.list2 <- lapply(output.list, FUN=function(x) {
+			for (i in all.bio.vars ) {
+				if ( length(grep(i,names(x), fixed=TRUE))==0 ) {
+					x.names.old <- names(x)
+					x <- data.frame(x,i=NA, stringsAsFactors = FALSE)
+					names(x) <- c(x.names.old,i)
+					
+				} else {
+					x <- x
+				}
+			}
+			x <- x[,c(all.bio.vars)]
+		}
+		)
+		
+		#output <- do.call("rbind", output.list2)
+		output <- dplyr::rbind_all(output.list2)
+		return(output)
 	}
-	x <- x[,c(all.bio.vars)]
-}
 
-)
-
-output <- do.call("rbind", output.list2)
-
-output
-
-}

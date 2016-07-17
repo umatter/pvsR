@@ -6,7 +6,8 @@
 ##' @param state (optional) a character string or list of character strings with the state(s) (default: "NA", for national) (see references for details)
 ##' @return A data frame with a row for each bill and columns with the following variables describing the bill:\cr bills.bill*.billId,\cr bills.bill*.billNumber,\cr bills.bill*.title,\cr bills.bill*.type.
 ##' @references http://api.votesmart.org/docs/Votes.html\cr
-##' Use State.getStateIDs() to get a list of state IDs.
+##' Use State.getStateIDs() to get a list of state IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -19,47 +20,31 @@
 
 
 Votes.getBillsByStateRecent <-
-function (amount=100, state="NA") {
-  
-    
-# internal function
-Votes.getBillsByStateRecent.basic <- function (.amount, .state) {
-  
-request <-  "Votes.getBillsByStateRecent?"
-inputs  <-  paste("&amount=",.amount,"&state=",.state,sep="")
-output  <-  pvsRequest(request,inputs)
-output$state <- .state
-output
+	function (amount=100, state="NA") {
 
-}
-  
+		# internal function
+		Votes.getBillsByStateRecent.basic <- 
+			function (.amount, .state) {
 
-# Main function  
+				request <-  "Votes.getBillsByStateRecent?"
+				inputs  <-  paste("&amount=",.amount,"&state=",.state,sep="")
+				output  <-  pvsRequest(request,inputs)
+				output$state <- .state
+				
+				return(output)
+			}
 
-  output.list <- lapply(amount, FUN= function (y) {
-    lapply(state, FUN= function (s) {
-      Votes.getBillsByStateRecent.basic(.amount=y, .state=s)
-           }
-        )
-    }
-  )
-
-output.list <- do.call("c",output.list)
-
-
-# which list entry has the most columns, how many are these?
-coln <- which.is.max(sapply(output.list, ncol));
-max.cols <- max(sapply(output.list, ncol));
-
-# give all list entries (dfs in list) the same number of columns and the same names
-output.list2 <- lapply(output.list, function(x){
-if (ncol(x) < max.cols) x <- data.frame(cbind(matrix(NA, ncol=max.cols-ncol(x), nrow = 1, ),x),row.names=NULL)
-names(x) <- names(output.list[[coln]])
-x
-})
-
-output <- do.call("rbind",output.list2)
-output
-
-
-}
+		# Main function  
+		output.list <- lapply(amount, FUN= function (y) {
+			lapply(state, FUN= function (s) {
+				Votes.getBillsByStateRecent.basic(.amount=y, .state=s)
+			}
+			)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
+		
+		return(output)
+	}

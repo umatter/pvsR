@@ -8,7 +8,8 @@
 ##' @return A data frame with a row for each committee and columns with the following variables describing the committee:\cr committees.committee*.committeeId,\cr committees.committee*.parentId,\cr committees.committee*.stateId,\cr committees.committee*.committeeTypeId,\cr committees.committee*.name.
 ##' @references http://api.votesmart.org/docs/Committee.html|cr
 ##' See http://api.votesmart.org/docs/semi-static.html for a list of committee-type ID(s).\cr
-##' Use State.getStateIDs() to get a list of state IDs.
+##' Use State.getStateIDs() to get a list of state IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -22,60 +23,59 @@
 ##' \dontrun{committees <- Committee.getCommitteesByTypeState(typeId=list("H","S"),
 ##' stateId=list("NY","NJ"), all=FALSE)}
 ##' \dontrun{committees}
-
-
 ##' @export
 
 
-
 Committee.getCommitteesByTypeState <-
-function (typeId=list("H","S","J"), stateId="NA", all=FALSE) {
+	function (typeId=list("H","S","J"), stateId="NA", all=FALSE) {
+		
+		if (!all) {
+			nstateId <- length(stateId) 
+			ntypeId <- length(typeId) 
+			samelength <- nstateId == ntypeId
+			
+			if (!samelength) {
+				stop(paste0("If all=FALSE, stateId and officeTypeId must have the same length.\n",
+							"stateId has length: ", nstateId, "\ntypeId has length: ", ntypeId))
+			}
+		}
+		
 
-  
-# internal function
-Committee.getCommitteesByTypeState.basic <- function (.typeId, .stateId) {
-  
-request <-  "Committee.getCommitteesByTypeState?"
-inputs  <-  paste("&typeId=",.typeId,"&stateId=",.stateId,sep="")
-output  <-  pvsRequest(request,inputs)
-output$typeId <- .typeId
-output$stateId <- .stateId
-output
+		# internal function
+		Committee.getCommitteesByTypeState.basic <- 
+			function (.typeId, .stateId) {
+				
+				request <-  "Committee.getCommitteesByTypeState?"
+				inputs  <-  paste("&typeId=",.typeId,"&stateId=",.stateId,sep="")
+				output  <-  pvsRequest(request,inputs)
+				output$typeId <- .typeId
+				output$stateId <- .stateId
+				
+				return(output)
+		}  
 
-}  
-  
+		if (all==TRUE) {
 
-if (all==TRUE) {
-  
+			# Main function  
+			output.list <- lapply(typeId, FUN= function (y) {
+				lapply(stateId, FUN= function (s) {
+					Committee.getCommitteesByTypeState.basic(.typeId=y, .stateId=s)
+				}
+				)
+			}
+			)
+			
+		} else {
+			# Main function  
+			reqdf <- data.frame(t=unlist(typeId), s=unlist(stateId), stringsAsFactors = FALSE)
+			output.list <- lapply(1:dim(reqdf)[1], FUN= function (l) {
+				Committee.getCommitteesByTypeState.basic(.typeId=reqdf[l,"t"], .stateId=reqdf[l,"s"])
+			})
+		}  
+		
+		output.list <- redlist(output.list)
+		output <- rbind_all(output.list)
+		
+		return(output)
+	}
 
-# Main function  
-  output.list <- lapply(typeId, FUN= function (y) {
-    lapply(stateId, FUN= function (s) {
-      Committee.getCommitteesByTypeState.basic(.typeId=y, .stateId=s)
-           }
-        )
-    }
-  )
-
-} else {
-  
-  # Main function  
-  
-  reqdf <- data.frame(t=unlist(typeId), s=unlist(stateId))
-  
-  output.list <- lapply(1:dim(reqdf)[1], FUN= function (l) {
-    
-    Committee.getCommitteesByTypeState.basic(.typeId=reqdf[l,"t"], .stateId=reqdf[l,"s"])
-    
-  })
-  
-}  
-
-output.list <- redlist(output.list)
-
-output <- dfList(output.list)
-
-output
-
-
-}

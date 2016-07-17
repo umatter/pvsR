@@ -5,122 +5,98 @@
 ##' @param zip5 a character string or list of character strings with the five-digit ZIP code
 ##' @param zip4 (optional) a character string or list of character strings with the expanded ZIP+4 code (default: All)
 ##' @return A data frame with a row for each district and columns with the following variables describing the district:\cr districtList.district*.districtId,\cr districtList.district*.name,\cr districtList.district*.officeId,\cr districtList.district*.stateId.
-##' @references http://api.votesmart.org/docs/District.html
+##' @references http://api.votesmart.org/docs/District.html\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get district IDs by ZIP Code
-##' \dontrun{district <- District.getByZip(list(10001,10002),)}
+##' \dontrun{district <- District.getByZip(list(10001,10002))}
 ##' \dontrun{district}
 ##' @export
 
 District.getByZip <-
-function (zip5, zip4=NULL) {
-  
-  if (length(zip4)==0) {
-    # internal function
-    District.getByZip.basic1 <- function (.zip5) {
-      
-      request <-  "District.getByZip?"
-      inputs  <-  paste("&zip5=",.zip5,sep="")
-      
-      pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
-      
-      
-      output.base <- xmlRoot(xmlTreeParse(pvs.url, useInternalNodes=TRUE))
-      districts <-  removeChildren(output.base, kids=list(1,2))
-      electionDistricts <- districts[["electionDistricts"]]
-      districts <- removeChildren(districts, kids=list("electionDistricts"))
-      
-      output.districts <- data.frame(t(xmlSApply(districts, function(x) xmlSApply(x, xmlValue))), row.names=NULL)
-      output.districts$Type <- "district"
-      output.electionDistricts <- data.frame(t(xmlSApply(electionDistricts, function(x) xmlSApply(x, xmlValue))), row.names=NULL)
-      output.electionDistricts$Type <- "electionDistrict"
-      
-      
-      output <- rbind(output.districts, output.electionDistricts)      
-      
-      output$zip5 <- .zip5
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(zip5, FUN= function (s) {
-      District.getByZip.basic1(.zip5=s)
-    }
-                          )
-    
-    
-    output.list <- redlist(output.list)
-    
-    
-    output <- dfList(output.list)
-    
-    
-  } else {
-    
-    # internal function
-    District.getByZip.basic2 <- function (.zip5, .zip4) {
-      
-      pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
-      
-      
-      request <-  "District.getByZip?"
-      inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, sep="")
-      
-      output.base <- xmlRoot(xmlTreeParse(pvs.url, useInternalNodes=TRUE))
-      districts <-  removeChildren(output.base, kids=list(1,2))
-      electionDistricts <- districts[["electionDistricts"]]
-      districts <- removeChildren(districts, kids=list("electionDistricts"))
-      
-      output.districts <- data.frame(t(xmlSApply(districts, function(x) xmlSApply(x, xmlValue))), row.names=NULL)
-      output.districts$Type <- "district"
-      output.electionDistricts <- data.frame(t(xmlSApply(electionDistricts, function(x) xmlSApply(x, xmlValue))), row.names=NULL)
-      output.electionDistricts$Type <- "electionDistrict"
-      
-      
-      output <- rbind(output.districts, output.electionDistricts)
-      
-      output$zip5 <- .zip5
-      output$zip4. <- .zip4
-      output
-      
-    }
-    
-    
-    # Main function  
-    
-    output.list <- lapply(zip5, FUN= function (s) {
-      lapply(zip4, FUN= function (c) {
-        District.getByZip.basic2( .zip5=s, .zip4=c)
-      }
-             )
-    }
-                          )
-    
-    
-    
-    output.list <- redlist(output.list)
-    
-    output <- dfList(output.list)
-    
-    
+	function (zip5, zip4=NULL) {
+		
+		if (length(zip4)==0) {
+			# internal function
+			District.getByZip.basic1 <- function (.zip5) {
+				
+				request <-  "District.getByZip?"
+				inputs  <-  paste("&zip5=",.zip5,sep="")
+				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				
+				output.base <- xmlRoot(xmlTreeParse(pvs.url, useInternalNodes=TRUE))
+				districts <-  removeChildren(output.base, kids=list(1,2))
+				if ("electionDistricts" %in% names(districts)){
+					electionDistricts <- districts[["electionDistricts"]]
+					districts <- removeChildren(districts, kids=list("electionDistricts"))
+					output.electionDistricts <- data.frame(t(xmlSApply(electionDistricts, function(x) xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE)
+					output.electionDistricts$Type <- "electionDistrict"
+				} else {
+					output.electionDistricts <- data.frame(zip5=.zip5, Type="electionDistrict", stringsAsFactors = FALSE)
+				}
+				output.districts <- data.frame(t(xmlSApply(districts, function(x) xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE)
+				output.districts$Type <- "district"
+				
+				output <- rbind_all(list(output.districts, output.electionDistricts))      
+				output$zip5 <- .zip5
+				
+				return(output)
+			}
+			
+			# Main function  
+			output.list <- lapply(zip5, FUN= function (s) {
+				District.getByZip.basic1(.zip5=s)
+			}
+			)
 
-    
-    
-    
-  }
-  
-  
-  
-  
-  
-  output
-  
-  
-  
-}
+			output.list <- redlist(output.list)
+			output <- rbind_all(output.list)
+
+		} else {
+			
+			# internal function
+			District.getByZip.basic2 <- function (.zip5, .zip4) {
+				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+
+				request <-  "District.getByZip?"
+				inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, sep="")
+				
+				output.base <- xmlRoot(xmlTreeParse(pvs.url, useInternalNodes=TRUE))
+				districts <-  removeChildren(output.base, kids=list(1,2))
+				if ("electionDistricts" %in% names(districts)){
+					electionDistricts <- districts[["electionDistricts"]]
+					districts <- removeChildren(districts, kids=list("electionDistricts"))
+					output.electionDistricts <- data.frame(t(xmlSApply(electionDistricts, function(x) xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE)
+					output.electionDistricts$Type <- "electionDistrict"
+				} else {
+					output.electionDistricts <- data.frame(zip4=.zip4, Type="electionDistrict", stringsAsFactors = FALSE)
+				}
+				
+				output.districts <- data.frame(t(xmlSApply(districts, function(x) xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE)
+				output.districts$Type <- "district"
+
+				output <- rbind_all(list(output.districts, output.electionDistricts))      
+				output$zip5 <- .zip5
+				output$zip4 <- .zip4
+				
+				return(output)
+			}
+			
+			# Main function  
+			output.list <- lapply(zip5, FUN= function (s) {
+				lapply(zip4, FUN= function (c) {
+					District.getByZip.basic2( .zip5=s, .zip4=c)
+				}
+				)
+			}
+			)
+			
+			output.list <- redlist(output.list)
+			output <- rbind_all(output.list)
+		}
+		return(output)
+	}
+

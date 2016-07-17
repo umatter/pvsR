@@ -5,7 +5,8 @@
 ##' @param candidateId a character string or list of character strings with the candidate ID(s) (see references for details)
 ##' @return A data frame with a row for each candidate and columns with the following variables describing the candidate:\cr bio.candidate.crpId (OpenSecrets ID),\cr bio.candidate.firstName,\cr bio.candidate.nickName,\cr bio.candidate.middleName,\cr bio.candidate.lastName,\cr bio.candidate.suffix,\cr bio.candidate.birthDate,\cr bio.candidate.birthPlace,\cr bio.candidate.pronunciation,\cr bio.candidate.gender,\cr bio.candidate.family,\cr bio.candidate.photo,\cr bio.candidate.homeCity,\cr bio.candidate.homeState,\cr bio.candidate.education,\cr bio.candidate.profession,\cr bio.candidate.political,\cr bio.candidate.religion,\cr bio.candidate.congMembership,\cr bio.candidate.orgMembership,\cr bio.candidate.specialMsg,\cr bio.office.parties,\cr bio.office.title,\cr bio.office.shortTitle,\cr bio.office.name,\cr bio.office.type,\cr bio.office.status,\cr bio.office.firstElect,\cr bio.office.lastElect,\cr bio.office.nextElect,\cr bio.office.termStart,\cr bio.office.termEnd,\cr bio.office.district,\cr bio.office.districtId,\cr bio.office.stateId,\cr bio.office.committee*.committeeId,\cr bio.office.committee*.committeeName,\cr bio.election*.office,\cr bio.election*.officeId,\cr bio.election*.officeType,\cr bio.election*.parties,\cr bio.election*.district,\cr bio.election*.districtId,\cr bio.election*.status,\cr bio.election*.ballotName.
 ##' @references http://api.votesmart.org/docs/CandidateBio.html\cr 
-##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.
+##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -19,34 +20,36 @@
 
 
 Npat.getNpat <-
-function (candidateId) {
+	function (candidateId) {
 
-  
-# internal function 
-  Npat.getNpat.basic <- function (.candidateId) {
-  
-request <-  "Npat.getNpat?"
-inputs  <-  paste("&candidateId=",.candidateId, sep="")
-output  <-  pvsRequest_PCT(request,inputs)
-output  <-  lapply(output, FUN=function(i){ 
-  if (length(grep(pattern="candidateId",x=names(i), value=TRUE))>0) {i}
-  else {data.frame(i,"candidateId" =.candidateId)}})
+		# internal function 
+		Npat.getNpat.basic <- 
+			function (.candidateId) {
 
-}
-
-
-  output.list <- lapply(candidateId, FUN= function (b) {
-    
-    Npat.getNpat.basic(.candidateId=b)
-             
-    }
-  )
-
-candidates <- lapply(output.list, function(x) x[["candidate"]])
-candidates <- dfList(redlist(candidates))
-surveys <- lapply(output.list, function(x) x[["survey"]])
-surveys <- dfList(redlist(surveys))
-
-return(list(candidate=candidates, survey=surveys))
-
-}
+				request <-  "Npat.getNpat?"
+				inputs  <-  paste("&candidateId=",.candidateId, sep="")
+				output  <-  pvsRequest_PCT(request,inputs)
+				output  <-  lapply(output, FUN=function(i){
+					
+					if (length(grep(pattern="candidateId",x=names(i), value=TRUE))>0) {
+						return(i)
+					} else {
+							df.i <- data.frame(i,"candidateId" =.candidateId, stringsAsFactors = FALSE)
+							return(df.i)
+							}
+					})
+			}
+		
+		# main function
+		output.list <- lapply(candidateId, FUN= function (b) {
+			Npat.getNpat.basic(.candidateId=b)
+		}
+		)
+		
+		candidates <- lapply(output.list, function(x) x[["candidate"]])
+		candidates <- bind_rows(redlist(candidates))
+		surveys <- lapply(output.list, function(x) x[["survey"]])
+		surveys <- bind_rows(redlist(surveys))
+		
+		return(list(candidate=candidates, survey=surveys))
+	}

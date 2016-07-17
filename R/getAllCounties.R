@@ -4,7 +4,8 @@
 ##' @usage getAllCounties()
 ##' @return A data frame with a row for each county and columns with the following variables describing the county:\cr counties.county*.localId,\cr counties.county*.name,\cr counties.county*.url.
 ##' @references http://api.votesmart.org/docs/Local.html\cr
-##' Use State.getStateIDs() to get a list of state IDs.
+##' Use State.getStateIDs() to get a list of state IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -22,5 +23,5 @@ getAllCounties <-
     states <- State.getStateIDs()
     nocounties <- c("NA", "PR", "GU", "AS", "VI", "DC")
     states <- states[!(states$stateId %in% nocounties),]
-    Local.getCounties(states$stateId) # should be extended with Rwebapi-dl functions! 
+    Local.getCounties(states$stateId) 
   }

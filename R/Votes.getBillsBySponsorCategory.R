@@ -7,7 +7,8 @@
 ##' @return A data frame with a row for each bill and columns with the following variables describing the bill:\cr bills.bill*.billId,\cr bills.bill*.billNumber,\cr bills.bill*.title,\cr bills.bill*.type.
 ##' @references http://api.votesmart.org/docs/Votes.html\cr
 ##' Use Votes.getCategories() to get a list of category IDs.\cr
-##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.
+##' Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -19,48 +20,30 @@
 
 
 Votes.getBillsBySponsorCategory <-
-function (categoryId, candidateId) {
-  
-    
-# internal function
-Votes.getBillsBySponsorCategory.basic <- function (.categoryId, .candidateId) {
-  
-request <-  "Votes.getBillsBySponsorCategory?"
-inputs  <-  paste("&categoryId=",.categoryId,"&candidateId=",.candidateId,sep="")
-output  <-  pvsRequest(request,inputs)
-output$categoryId <- .categoryId
-output$candidateId <- .candidateId
-output
+	function (categoryId, candidateId) {
 
-}
-  
+		# internal function
+		Votes.getBillsBySponsorCategory.basic <- 
+			function (.categoryId, .candidateId) {
+				request <-  "Votes.getBillsBySponsorCategory?"
+				inputs  <-  paste("&categoryId=",.categoryId,"&candidateId=",.candidateId,sep="")
+				output  <-  pvsRequest(request,inputs)
+				output$categoryId <- .categoryId
+				output$candidateId <- .candidateId
+				
+				return(output)
+			}
 
-# Main function  
+		# Main function  
+		output.list <- lapply(categoryId, FUN= function (y) {
+			lapply(candidateId, FUN= function (s) {
+				Votes.getBillsBySponsorCategory.basic(.categoryId=y, .candidateId=s)
+			}
+			)
+		}
+		)
+		output.list <- redlist(output.list)
+		output <- bind_rows(output.list)
 
-  output.list <- lapply(categoryId, FUN= function (y) {
-    lapply(candidateId, FUN= function (s) {
-      Votes.getBillsBySponsorCategory.basic(.categoryId=y, .candidateId=s)
-           }
-        )
-    }
-  )
-
-output.list <- do.call("c",output.list)
-
-
-# which list entry has the most columns, how many are these?
-coln <- which.is.max(sapply(output.list, ncol));
-max.cols <- max(sapply(output.list, ncol));
-
-# give all list entries (dfs in list) the same number of columns and the same names
-output.list2 <- lapply(output.list, function(x){
-if (ncol(x) < max.cols) x <- data.frame(cbind(matrix(NA, ncol=max.cols-ncol(x), nrow = 1, ),x),row.names=NULL)
-names(x) <- names(output.list[[coln]])
-x
-})
-
-output <- do.call("rbind",output.list2)
-output
-
-
-}
+		return(output)
+	}

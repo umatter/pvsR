@@ -5,7 +5,8 @@
 ##' @param electionId a character string or list of character strings with the election ID(s) (see references for details)
 ##' @return A data frame with a row for each election and columns with the following variables describing the election:\cr elections.election*.electionId,\cr elections.election*.name,\cr elections.election*.stateId,\cr elections.election*.officeTypeId,\cr elections.election*.special,\cr elections.election*.electionYear.\cr For each stage the following variables are jointly (as one string) in a column:\cr elections.election*.stage*.stageId,\cr elections.election*.stage*.name,\cr elections.election*.stage*.stateId,\cr elections.election*.stage*.electionDate,\cr elections.election*.stage*.filingDeadline,\cr elections.election*.stage*.npatMailed.
 ##' @references http://api.votesmart.org/docs/Election.html\cr
-##' Use Election.getElectionByYearState() or Election.getElectionByZip() to get election ID(s).
+##' Use Election.getElectionByYearState() or Election.getElectionByZip() to get election ID(s).\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
@@ -16,41 +17,28 @@
 ##' @export
 
 
-
-
-
 Election.getElection <-
-function (electionId) {
-  
-  
-  # internal function
-  Election.getElection.basic <- function (.electionId) {
-    
-    request <-  "Election.getElection?"
-    inputs  <-  paste("&electionId=",.electionId,sep="")
-    output  <-  pvsRequest10(request,inputs)
-    
-    output
-    
-  }
-  
-  
-  # Main function  
-  
-  output.list <- lapply(electionId, FUN= function (s) {
-    Election.getElection.basic(.electionId=s)
-  }
-                        )
-  
-  
-  output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+	function (electionId) {
+
+		# internal function
+		Election.getElection.basic <- 
+			function (.electionId) {
+				request <-  "Election.getElection?"
+				inputs  <-  paste("&electionId=",.electionId,sep="")
+				output  <-  pvsRequest10(request,inputs)
+				
+				return(output)
+		}
+		
+		
+		# Main function  
+		output.list <- lapply(electionId, FUN= function (s) {
+			Election.getElection.basic(.electionId=s)
+		}
+		)
+		
+		output.list <- redlist(output.list)
+		output <- rbind_all(output.list)
+		return(output)
+	}
+
