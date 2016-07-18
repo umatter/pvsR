@@ -3,7 +3,7 @@
 
 ### pvsR: Interact with the Project Vote Smart API for scientific research  ###
 
-Facilitates data retrieval from Project Vote Smart's rich online data base on US politics via the Project Vote Smart application programming interface (PVS API). The functions in this package cover most PVS API classes and methods and return the requested data in a data frame.
+An R package that facilitates data retrieval from Project Vote Smart's rich online data base on US politics via the Project Vote Smart application programming interface (PVS API). The functions in this package cover most PVS API classes and methods and return the requested data in a data frame. pvsR is an R-wrapper around the PVS API with the explicit aim to facilitate the use of PVS data for empirical research.
 
 * Current version: 0.4
 * Vignette/Introduction/Examples/Background: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130501 
