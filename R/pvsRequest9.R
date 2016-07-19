@@ -7,27 +7,17 @@ pvsRequest9 <-
     
     # if the requested data is not available, return an empty (NA) data frame and give a warning
     warning(gsub(pattern="&", replacement=" ", x=paste("No data available for: ", inputs,". The corresponding rows in the data frame are filled with NAs.", sep=""), fixed=TRUE), call.=FALSE)
-    
-    
-    output.df <- data.frame(matrix(nrow=1,ncol=0))
-    output.df
-    
-    
+
+    output.df <- data.frame(matrix(nrow=1,ncol=0), stringsAsFactors = FALSE)
+    return(output.df)
+
   } else {
-    
-    
-    
-    
-    output <- xmlRoot(xmlTreeParse(pvs.url,useInternalNodes=TRUE))
-    
+
+  	output <- xmlRoot(xmlTreeParse(pvs.url,useInternalNodes=TRUE))
     nodenames <- names(output) # get names of nodes
     
     # remove unnecessary child-nodes
-    
-    
     if (nodenames[1]=="generalInfo") {
-    
-    
     output <- removeChildren(output,kids="generalInfo")
     
     } else { if (nodenames[1]=="generalinfo") {
@@ -36,7 +26,6 @@ pvsRequest9 <-
     
     }
     }
-    
     nodenames <- names(output) # get names of nodes
     
   
@@ -52,39 +41,25 @@ pvsRequest9 <-
       
       
       if (sum(n.subnames)==length(n.subnames)) {
-        
-        subnode.df <- data.frame(t(xmlSApply(subn, xmlValue)))
-        
-        
+        subnode.df <- data.frame(t(xmlSApply(subn, xmlValue)), stringsAsFactors = FALSE)
+
       } else {
-        
-        
         # first, extract xml values of subnodes of subnodes (would otherwise generate problematic columns)
-        
         severalsubn <- which(freq.names>1)
         
         sevsubs <- lapply (1:length(severalsubn), FUN=function(i) {
-          
-          
           .sevsub <- which(names(subn)==names(severalsubn)[i]) # which subnodes (of subn) have several entries?
-          
           sevsub.list <- lapply(1:length(.sevsub), function(j){ 
-            
-            df <-   data.frame(t(xmlSApply(subn[[.sevsub[[j]] ]], xmlValue)))
-            
+            df <-   data.frame(t(xmlSApply(subn[[.sevsub[[j]] ]], xmlValue)), stringsAsFactors = FALSE)
             df.names <- sapply(1:length(names(df)), FUN=function(z) {paste(names(.sevsub[j]),j,".",names(df)[z], sep="")})
-            
             names(df) <- df.names
-            
             df
             
           }
           )
-          
-          
+
           sevsub.df <- do.call("cbind", sevsub.list)
-          
-          
+
         }
         )
         
@@ -93,28 +68,22 @@ pvsRequest9 <-
         
         # second, extract all xml values as usual (generates some problematic columns due to subnodes in subnodes)
         # therefore only keep the normal ones:
-        
-        df.ok <- data.frame(t(xmlSApply(subn, xmlValue)))
+        df.ok <- data.frame(t(xmlSApply(subn, xmlValue)), stringsAsFactors = FALSE)
         ok.names <- names(subn)[(names(subn)!=names(severalsubn)[1])]
         df.ok <- df.ok[,ok.names]
         
         
         # third, cbind the two data frames
-        
         subnode.df <- cbind(df.ok,sevsubs.extracted)
-        
       }
       
       subnode.df
       
     })
     
-    output.df <- dfList(subnodes.list)
+    output.df <- bind_rows(subnodes.list)
     
-    output.df
-    
+    return(output.df)
+    }
   }
-  
-  
-}
 

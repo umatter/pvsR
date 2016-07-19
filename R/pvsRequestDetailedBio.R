@@ -66,13 +66,13 @@ pvsRequestDetailedBio <-
 			dfn <- names(output.list)
 			
 			pseudo.output <- list(
-				candidate=data.frame(candidateId="NA"),
-				office=data.frame(name="NA"),
-				education=data.frame(degree="NA"),
-				profession=data.frame(title="NA"),
-				political=data.frame(title="NA"),
-				congMembership=data.frame(title="NA"),
-				orgMembership=data.frame(title="NA")
+				candidate=data.frame(candidateId="NA", stringsAsFactors = FALSE),
+				office=data.frame(name="NA", stringsAsFactors = FALSE),
+				education=data.frame(degree="NA", stringsAsFactors = FALSE),
+				profession=data.frame(title="NA", stringsAsFactors = FALSE),
+				political=data.frame(title="NA", stringsAsFactors = FALSE),
+				congMembership=data.frame(title="NA", stringsAsFactors = FALSE),
+				orgMembership=data.frame(title="NA", stringsAsFactors = FALSE)
 			)
 			nitems <- 1:length(pseudo.output)
 			missing <- !(names(pseudo.output) %in% dfn) # missing nodes

@@ -1,6 +1,6 @@
 ##' Get a list of candidates according to their lastname
 ##'  
-##' This function is a wrapper for the Candidates.getByLastname() method of the PVS API Candidates class which grabs a list of candidates according to a lastname match. The function sends a request with this method to the PVS API for all last names and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
+##' A wrapper for the Candidates.getByLastname() method of the PVS API Candidates class which grabs a list of candidates according to a lastname match. The function sends a request with this method to the PVS API for all last names and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 ##' @usage Candidates.getByLastname(lastName, electionYear=NULL)
 ##' @param lastName a character string or list of character strings with the last name(s) (see references for details)
 ##' @param electionYear (optional) a character string or list of character strings with the election year(s) (default: >= current year)

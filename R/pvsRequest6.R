@@ -52,7 +52,7 @@ pvsRequest6 <-
 				# now scrap the remaining output
 				output.list <- lapply(1:length(names(output)), FUN=function(i) {
 					x <- output[[i]]
-					data.frame(t(xmlSApply(x, xmlValue)))
+					data.frame(t(xmlSApply(x, xmlValue)), stringsAsFactors = FALSE)
 					})
 				output2 <- suppressWarnings(bind_rows(output.list)) # coercion to character is just fine, no warning needed
 				output2 <- cbind(freq1.df, output2)

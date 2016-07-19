@@ -45,5 +45,18 @@ pvsR 0.3
 * Fixed several little bugs
 
 
+pvsR 0.4
+-----------------------------------
+
+* Replaced internal function dfList() with faster implementation in dplyr::bind_rows, removed dfList() from package
+
+* In order to improve the comfort in interactive sessions, all high-level functions for querying data from the PVS API return now objects of class "tbl_df"/"tbl"/"data.frame".
+
+* Low-level functions are now all set to stringsAsFactors = FALSE
+
+* Improved code-readability/formatting
+
+* Updated package documentation with respect to references/citation
+
 
 

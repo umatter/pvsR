@@ -10,9 +10,7 @@ citEntry(entry="Article",
          volume = "10",
          number = "7",
          pages ="e0130501",
-         url = "http://dx.doi.org/10.1371%2Fjournal.pone.0130501"
-         doi = "10.1371/journal.pone.0130501""
-	 url = "http://CRAN.R-project.org/package=pvsR",
-
+         url = "http://dx.doi.org/10.1371%2Fjournal.pone.0130501",
+         doi = "10.1371/journal.pone.0130501",
          textVersion = "Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501")
 

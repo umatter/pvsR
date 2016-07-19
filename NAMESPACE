@@ -69,4 +69,5 @@ export(getAllLocalOfficials)
 export(getAllVotes)
 export(getOffices)
 import(XML, httr, nnet, dplyr)
-
+importFrom("stats", "na.omit")
+importFrom("utils", "setTxtProgressBar", "txtProgressBar")

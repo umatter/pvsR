@@ -8,11 +8,8 @@ pvsRequest8 <-
   errors <-  getXMLErrors(xmltext) # check if xml can be parsed properly
   
   if (length(errors) != 0) {
-    
     if (names(errors[[1]]$code) == "XML_ERR_CDATA_NOT_FINISHED") { # if not, try to fix 
-      
       xmltext <- gsub(pattern="\003", replacement="", x=xmltext, fixed=TRUE)
-      
     }
   }
   

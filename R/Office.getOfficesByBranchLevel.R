@@ -43,7 +43,7 @@ Office.getOfficesByBranchLevel <-
 		)
 		
 		output.list <- redlist(output.list)
-		output <- bind_rowsist(output.list)
+		output <- bind_rows(output.list)
 
 		return(output)
 	}

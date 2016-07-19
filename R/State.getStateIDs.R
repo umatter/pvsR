@@ -1,12 +1,12 @@
 ##' Get a list of states and their IDs.
 ##' 
 ##' This function is a wrapper for the State.getStateIDs() method of the PVS API State class which returns a simple state ID and name list for mapping IDs to state names. 
-##' @usage State.getStateIDs()\cr
-##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
+##' @usage State.getStateIDs()
 ##' @return A data frame with a row for each state:\cr
 ##' statelist.list.state*.stateId,\cr
 ##' statelist.list.state*.name
-##' @references http://api.votesmart.org/docs/State.html
+##' @references http://api.votesmart.org/docs/State.html\cr
+##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
 ##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:

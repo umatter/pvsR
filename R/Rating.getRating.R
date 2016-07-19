@@ -30,26 +30,17 @@ function (ratingId) {
     output  <-  pvsRequest4(request,inputs)
     output$ratingId <- .ratingId
     output
-    
-  }
+    }
   
   
   # Main function  
-  
   output.list <- lapply(ratingId, FUN= function (s) {
     Rating.getRating.basic(.ratingId=s)
-  }
-                        )
+  	}
+    )
   
   
   output.list <- redlist(output.list)
-  
-  
-  output <- dfList(output.list)
-  
-  
-  output
-  
-  
-  
-}
+  output <- bind_rows(output.list)
+  return(output)
+  }

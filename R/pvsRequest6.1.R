@@ -25,7 +25,7 @@ function (request,inputs) {
     warning(gsub(pattern="&", replacement=" ", x=paste("No data available for: ", inputs,". The corresponding rows in the data frame are filled with NAs.", sep=""), fixed=TRUE), call.=FALSE)
     
     
-    output.df <- data.frame(matrix(nrow=1,ncol=0))
+    output.df <- data.frame(matrix(nrow=1,ncol=0), stringsAsFactors = FALSE)
     output.df
     
     
@@ -63,40 +63,25 @@ function (request,inputs) {
       
       # scrap all data from nodes that come up once, and cbind the resulting dfs
       freq1.list <- lapply(freq1b, FUN=function(i) {
-        
         x <- output[[i]]
-        
-                
-        i.df <- data.frame(t(xmlSApply(x, xmlValue)))
-        
+        i.df <- data.frame(t(xmlSApply(x, xmlValue)), stringsAsFactors = FALSE)
         try(if (names(x)=="text")     names(i.df) <- i, silent=TRUE )
-        
         i.df
-        
       })
-      
       freq1.df <- do.call("cbind", freq1.list)
       
-      
       # remove freq1-nodes from output.
-      
       for (i in freq1)   output <- removeChildren(output,i)
-      
-      
-      
+       
       # now scrap the remaining output
-      
       output.list <- lapply(1:length(names(output)), FUN=function(i) {
         
         x <- output[[i]]
-        
-        data.frame(t(xmlSApply(x, xmlValue)))
-        
-        
-      })
+        data.frame(t(xmlSApply(x, xmlValue)), stringsAsFactors = FALSE)
+        })
       
       
-      output2 <- dfList(output.list)
+      output2 <- bind_rows(output.list)
       
       output2 <- cbind(freq1.df,output2)
       output2
@@ -104,7 +89,7 @@ function (request,inputs) {
     } else {
       
       output <- t(xmlSApply(removeChildren(output.base,kids=1), function(x) xmlSApply(x, xmlValue)))
-      output.df <- data.frame(output, row.names=NULL)
+      output.df <- data.frame(output, row.names=NULL, stringsAsFactors = FALSE)
       output.df
       
     }
