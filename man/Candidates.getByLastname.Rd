@@ -4,7 +4,7 @@
 \alias{Candidates.getByLastname}
 \title{Get a list of candidates according to their lastname
  
-This function is a wrapper for the Candidates.getByLastname() method of the PVS API Candidates class which grabs a list of candidates according to a lastname match. The function sends a request with this method to the PVS API for all last names and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.}
+A wrapper for the Candidates.getByLastname() method of the PVS API Candidates class which grabs a list of candidates according to a lastname match. The function sends a request with this method to the PVS API for all last names and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.}
 \usage{
 Candidates.getByLastname(lastName, electionYear=NULL)
 }
@@ -19,7 +19,7 @@ A data frame with a row for each candidate and year and columns with the followi
 \description{
 Get a list of candidates according to their lastname
  
-This function is a wrapper for the Candidates.getByLastname() method of the PVS API Candidates class which grabs a list of candidates according to a lastname match. The function sends a request with this method to the PVS API for all last names and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
+A wrapper for the Candidates.getByLastname() method of the PVS API Candidates class which grabs a list of candidates according to a lastname match. The function sends a request with this method to the PVS API for all last names and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
 # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
