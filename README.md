@@ -10,7 +10,7 @@ An R package that facilitates data retrieval from Project Vote Smart's rich onli
 
 ### How to get started? ###
 
-* Install via the devtools package: install_bitbucket("ulrich-matter/pvsR")
+* Install via the devtools package: install_github("umatter/pvsR")
 * Dependencies: see DESCRIPTION-File in Source-directory
 
 ### Contribution guidelines ###
