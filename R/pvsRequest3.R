@@ -14,18 +14,29 @@ pvsRequest3 <-
 			t <- t +1
 		}
 		
-		xmltext <- content(x=httpresp, as="text")
-		errors <-  getXMLErrors(xmltext) # check if xml can be parsed properly
-		if (length(errors) != 0) {
-			if (names(errors[[1]]$code) == "XML_ERR_CDATA_NOT_FINISHED") { # if not, try to fix 
-				xmltext <- gsub(pattern="\003", replacement="", x=xmltext, fixed=TRUE)
+		# in rare cases, the transaction still fails
+		# ensure that code does not break and empty result is shown
+		if (is.response(httpresp)){
+			
+			xmltext <- content(x=httpresp, as="text")
+			errors <-  getXMLErrors(xmltext) # check if xml can be parsed properly
+			if (length(errors) != 0) {
+				if (names(errors[[1]]$code) == "XML_ERR_CDATA_NOT_FINISHED") { # if not, try to fix 
+					xmltext <- gsub(pattern="\003", replacement="", x=xmltext, fixed=TRUE)
+				}
 			}
+			
+			# in case of (still) malformed XML, force parsing problems into an empty function (does not
+			# break parsing process. parser might still work.)
+			output.base <- xmlRoot(xmlTreeParse(xmltext, useInternalNodes=TRUE, error=function(...){}))
+			output <- xmlSApply(output.base, function(x) data.frame(t(xmlSApply(x, xmlValue)), stringsAsFactors = FALSE))
+			
+			return(output)
+			
+		} else {
+			
+			return(data.frame(V1="NA"))
 		}
 		
-		# in case of (still) malformed XML, force parsing problems into an empty function (does not
-		# break parsing process. parser might still work.)
-		output.base <- xmlRoot(xmlTreeParse(xmltext, useInternalNodes=TRUE, error=function(...){}))
-		output <- xmlSApply(output.base, function(x) data.frame(t(xmlSApply(x, xmlValue)), stringsAsFactors = FALSE))
-		output
   	
   }
