@@ -18,7 +18,7 @@ pvsRequest3 <-
 		# in rare cases, the transaction still fails
 		xmltext <- try(content(x=httpresp, as="text"), silent = TRUE)
 		# ensure that code does not break and empty result is shown
-			if (class(httpresp)[1]=="try-error"){
+			if (class(httpresp)[1]!="try-error"){
 			  
 			errors <-  getXMLErrors(xmltext) # check if xml can be parsed properly
 			if (length(errors) != 0) {

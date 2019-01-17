@@ -55,7 +55,7 @@ CandidateBio.getBio <-
 			}
 		})})
 		
-		output.list3 <- lapply(output.list2, rbind_all)
+		output.list3 <- lapply(output.list2, bind_rows)
 		
 # 		output.list3 <- lapply(output.list2, FUN=function(ol){
 # 			

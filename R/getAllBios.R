@@ -27,6 +27,9 @@ getAllBios <-
 	function(candidateId, batchsize=100, pause=0, backupfile="bios.list.Rdata") {
 
 		n <- length(candidateId)
+		if (n < batchsize) {
+		  batchsize <- n
+		}
 		rest <- n%%batchsize
 		chunks.upper <- seq(from = batchsize, to = n, by = batchsize)
 		if (rest != 0) {
