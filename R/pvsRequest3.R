@@ -14,11 +14,12 @@ pvsRequest3 <-
 			t <- t +1
 		}
 		
+
 		# in rare cases, the transaction still fails
+		xmltext <- try(content(x=httpresp, as="text"), silent = TRUE)
 		# ensure that code does not break and empty result is shown
-		if (is.response(httpresp)){
-			
-			xmltext <- content(x=httpresp, as="text")
+			if (class(httpresp)[1]=="try-error"){
+			  
 			errors <-  getXMLErrors(xmltext) # check if xml can be parsed properly
 			if (length(errors) != 0) {
 				if (names(errors[[1]]$code) == "XML_ERR_CDATA_NOT_FINISHED") { # if not, try to fix 
