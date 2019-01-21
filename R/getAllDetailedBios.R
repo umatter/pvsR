@@ -22,6 +22,7 @@
 ##' \dontrun{str(bios)}
 ##' \dontrun{head(bios$education)}
 ##' @export
+##' 
 
 
 getAllDetailedBios <-
