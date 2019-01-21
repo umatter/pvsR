@@ -24,12 +24,11 @@ This function is a wrapper for the Votes.getBillsBySponsorYear() method of the P
 \dontrun{bills <- Votes.getBillsBySponsorYear(2010:2012,107800)}
 \dontrun{bills}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Votes.html\cr
 Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

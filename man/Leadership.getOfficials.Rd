@@ -24,13 +24,12 @@ This function is a wrapper for the Leadership.getOfficials() method of the PVS A
 \dontrun{officials <- Leadership.getOfficials(list("NY","FL"),list(138,140))}
 \dontrun{officials}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Leadership.html\cr
 Use State.getStateIDs() to get a list of state IDs.\cr
 Use Leadership.getPositions() to get a list of leadership IDs.\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

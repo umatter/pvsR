@@ -22,11 +22,10 @@ This function is a wrapper for the Votes.getBillActionVotes() method of the PVS 
 \dontrun{actionvote <- Votes.getBillActionVotes(list(31712,28686))}
 \dontrun{actionvote}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Votes.html\cr
 Use Votes.getBill() or Votes.getByOfficial() to get a list of action IDs.
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

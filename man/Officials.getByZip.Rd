@@ -25,10 +25,9 @@ This function is a wrapper for the Officials.getByZip() method of the PVS API Of
 \dontrun{officials <- Officials.getByZip(list(10001,10002))}
 \dontrun{head(officials)}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Officials.html
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

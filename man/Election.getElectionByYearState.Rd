@@ -24,12 +24,11 @@ This function is a wrapper for the Election.getElectionByYearState() method of t
 \dontrun{election <- Election.getElectionByYearState(list("NY","FL"),2012)}
 \dontrun{election}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Election.html\cr
 Use State.getStateIDs() to get a list of state IDs.\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

@@ -24,12 +24,11 @@ This function is a wrapper for the Officials.getByOfficeState() method of the PV
 \dontrun{officials <- Officials.getByOfficeState(,as.list(60:69))}
 \dontrun{officials}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Officials.html\cr
 Use State.getStateIDs() to get a list of state IDs.\cr
 See http://api.votesmart.org/docs/semi-static.html or use Office.getOfficesByType(), Office.getOfficesByLevel(), Office.getOfficesByTypeLevel() or Office.getOfficesByBranchLevel() to get a list of office ID(s).
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

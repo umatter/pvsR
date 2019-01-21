@@ -22,12 +22,11 @@ This function is a wrapper for the Measure.getMeasure() method of the PVS API Me
 \dontrun{measure <- Measure.getMeasure(list(1632,1633))}
 \dontrun{measure}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Measure.html\cr
 Use Measure.getMeasuresByYearState() to get a list of measure IDs.\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

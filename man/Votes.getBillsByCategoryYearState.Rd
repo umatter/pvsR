@@ -26,12 +26,11 @@ This function is a wrapper for the Votes.getBillsByCategoryYearState() method of
 \dontrun{bills <- Votes.getBillsByCategoryYearState(as.list(2010:2012),"NY",10)}
 \dontrun{bills}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Votes.html\cr
 Use State.getStateIDs() to get a list of state IDs.\cr
 Use Votes.getCategories() or Rating.getCandidateRating() to get a list of category IDs.
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

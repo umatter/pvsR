@@ -58,7 +58,7 @@ CandidateBio.getDetailedBio <-
 		
 		output.list3 <- lapply(catnames, function(i){
 			
-			cat.i <- data.frame(rbind_all(output.list2[itemnames %in% i]), row.names = NULL, stringsAsFactors = FALSE)
+			cat.i <- data.frame(bind_rows(output.list2[itemnames %in% i]), row.names = NULL, stringsAsFactors = FALSE)
 			for (j in names(cat.i)) cat.i[,j] <- as.character(cat.i[,j])
 			return(as.tbl(cat.i))
 		})

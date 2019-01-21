@@ -24,11 +24,10 @@ This function is a wrapper for the Votes.getByOfficial() method of the PVS API V
 \dontrun{votes <- Votes.getByOfficial(as.list(2010:2012),9490)}
 \dontrun{votes}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Votes.html\cr
 Use Candidates.getByOfficeState(), Candidates.getByOfficeTypeState(), Candidates.getByLastname(), Candidates.getByLevenshtein(), Candidates.getByElection(), Candidates.getByDistrict() or Candidates.getByZip() to get a list of candidate IDs.
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

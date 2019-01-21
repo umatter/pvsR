@@ -22,12 +22,11 @@ This function is a wrapper for the Election.getElection() method of the PVS API 
 \dontrun{election <- Election.getElection(as.list(2595:2607))}
 \dontrun{election}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Election.html\cr
 Use Election.getElectionByYearState() or Election.getElectionByZip() to get election ID(s).\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

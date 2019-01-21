@@ -23,10 +23,9 @@ This function is a wrapper for the Officials.getByLevenshtein() method of the PV
 \dontrun{names <- Officials.getByLevenshtein(list("Miller","Fine"))}
 \dontrun{head(names)}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Officials.html
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

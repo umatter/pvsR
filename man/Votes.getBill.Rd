@@ -32,12 +32,11 @@ separate=c("sponsors","actions"))}
 # ... and the usual variables describing the bill (nodes not mentioned in separate)
 \dontrun{billinfo2$main}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Votes.html\cr
 Use Votes.getByBillNumber(), Votes.getBillsByCategoryYearState(), Votes.getBillsByYearState(), Votes.getBillsByOfficialYearOffice(), Votes.getBillsByOfficialCategoryOffice(), Votes.getByOfficial(), Votes.getBillsBySponsorYear(), Votes.getBillsBySponsorCategory() or Votes.getBillsByStateRecent() to get a list of bill IDs.\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

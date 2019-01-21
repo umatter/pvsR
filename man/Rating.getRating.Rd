@@ -22,11 +22,10 @@ This function is a wrapper for the Rating.getRating() method of the PVS API Rati
 \dontrun{scorecard <- Rating.getRating(77)}
 \dontrun{scorecard}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Rating.html\cr
 Use Rating.getSigRatings() or Rating.getCandidateRating() to get a list of rating IDs.
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

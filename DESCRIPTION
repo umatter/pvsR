@@ -26,4 +26,4 @@ Note: In order to use this package you need your personal Project Vote
     in the variable pvs.key the functions in this package won't
     work.
 NeedsCompilation: no
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.1

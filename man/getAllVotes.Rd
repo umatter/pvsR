@@ -34,12 +34,11 @@ This functions splits large requests into several batches. The requests are then
 \dontrun{votes <- getAllVotes(actionids, batchsize=2)}
 \dontrun{head(votes)}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Votes.html\cr
 Use Votes.getBill() or Votes.getByOfficial() to get a list of action IDs.\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

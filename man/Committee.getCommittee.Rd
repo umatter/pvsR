@@ -22,11 +22,10 @@ This function is a wrapper for the Committee.getCommittee() method of the PVS AP
 \dontrun{committee <- Committee.getCommittee(list(1,2))}
 \dontrun{committee}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Committee.html\cr 
 Use CandidateBio.getBio(), Committee.getCommitteesByTypeState() or Votes.getBill() to get committee ID(s).
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}

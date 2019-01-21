@@ -22,12 +22,11 @@ This function is a wrapper for the Officials.getByDistrict() method of the PVS A
 \dontrun{officials <- Officials.getByDistrict(as.list(25157:25163))}
 \dontrun{officials}
 }
-\author{
-Ulrich Matter <ulrich.matter-at-unibas.ch>
-}
 \references{
 http://api.votesmart.org/docs/Officials.html\cr
 Use District.getByOfficeState() or District.getByZip() to get a list of district ID(s).\cr
 See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 }
-
+\author{
+Ulrich Matter <ulrich.matter-at-unibas.ch>
+}
