@@ -50,6 +50,13 @@ pvsRequestDetailedBio <-
 			
 			# remove subnodes to be processed separately from main document
 			output[["candidate"]] <- removeChildren(output[["candidate"]], kids=separate)
+			# if office information available, process separately
+			if ("office" %in% names(output)){
+			  office <- output[["office"]]
+			  office_df <- as.data.frame(t(xmlSApply(office, function(x) xmlValue(x))), stringsAsFactors = FALSE) 
+			  output <- removeChildren(output, kids="office")
+			  seplist$office <- office_df
+			}
 			
 			# process rest as usual: 
 			if (length(names(output))>1) {
@@ -72,7 +79,8 @@ pvsRequestDetailedBio <-
 				profession=data.frame(title="NA", stringsAsFactors = FALSE),
 				political=data.frame(title="NA", stringsAsFactors = FALSE),
 				congMembership=data.frame(title="NA", stringsAsFactors = FALSE),
-				orgMembership=data.frame(title="NA", stringsAsFactors = FALSE)
+				orgMembership=data.frame(title="NA", stringsAsFactors = FALSE),
+				office=data.frame(title="NA", stringsAsFactors = FALSE)
 			)
 			nitems <- 1:length(pseudo.output)
 			missing <- !(names(pseudo.output) %in% dfn) # missing nodes
@@ -82,6 +90,7 @@ pvsRequestDetailedBio <-
 			
 			empty <- lapply(output.list,ncol)==0 # empty nodes
 			output.list[empty] <- pseudo.output[empty]
+			output.list <- output.list[!duplicated(names(output.list))]
 			
 			return(output.list)
 		}
