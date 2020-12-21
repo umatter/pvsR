@@ -39,7 +39,7 @@ Candidates.getByElection <-
 			)
 
 			output.list <- redlist(output.list)
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 
 		} else {
 			
@@ -66,7 +66,7 @@ Candidates.getByElection <-
 			)
 			
 			output.list <- redlist(output.list)
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 			
 			# Avoids, that output is missleading, because stageId is already given in request-output, but also a
 			# additionally generated (as stageId.input). Problem exists because some request-outputs might be empty

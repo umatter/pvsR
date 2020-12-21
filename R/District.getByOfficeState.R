@@ -82,7 +82,7 @@ District.getByOfficeState <-
 			}
 			
 			output.list <- redlist(output.list)
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 
 		} else {
 			
@@ -126,7 +126,7 @@ District.getByOfficeState <-
 			}
 			
 			output.list <- redlist(output.list)
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 			
 			# Avoids, that output is missleading, because districtName is already given in request-output, but also a
 			# additionally generated (as districtName.input). Problem exists because some request-outputs might be empty

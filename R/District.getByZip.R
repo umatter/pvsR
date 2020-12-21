@@ -40,7 +40,7 @@ District.getByZip <-
 				output.districts <- data.frame(t(xmlSApply(districts, function(x) xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE)
 				output.districts$Type <- "district"
 				
-				output <- rbind_all(list(output.districts, output.electionDistricts))      
+				output <- bind_rows(list(output.districts, output.electionDistricts))      
 				output$zip5 <- .zip5
 				
 				return(output)
@@ -53,7 +53,7 @@ District.getByZip <-
 			)
 
 			output.list <- redlist(output.list)
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 
 		} else {
 			
@@ -78,7 +78,7 @@ District.getByZip <-
 				output.districts <- data.frame(t(xmlSApply(districts, function(x) xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE)
 				output.districts$Type <- "district"
 
-				output <- rbind_all(list(output.districts, output.electionDistricts))      
+				output <- bind_rows(list(output.districts, output.electionDistricts))      
 				output$zip5 <- .zip5
 				output$zip4 <- .zip4
 				
@@ -95,7 +95,7 @@ District.getByZip <-
 			)
 			
 			output.list <- redlist(output.list)
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 		}
 		return(output)
 	}

@@ -80,7 +80,7 @@ pvsRequest9.1 <-
 				}
 				subnode.df
 			})
-			output.df <- rbind_all(subnodes.list)
+			output.df <- bind_rows(subnodes.list)
 			
 			return(output.df)
 		}

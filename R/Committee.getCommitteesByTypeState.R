@@ -74,7 +74,7 @@ Committee.getCommitteesByTypeState <-
 		}  
 		
 		output.list <- redlist(output.list)
-		output <- rbind_all(output.list)
+		output <- bind_rows(output.list)
 		
 		return(output)
 	}

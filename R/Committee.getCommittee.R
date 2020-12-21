@@ -78,7 +78,7 @@ Committee.getCommittee <-
 					} else {x}
 				}
 			})
-			output <- rbind_all(ol2)
+			output <- bind_rows(ol2)
 			output
 		}
 		)

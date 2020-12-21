@@ -37,7 +37,7 @@ Committee.getCommitteeMembers <-
 					} else {
 					items <- getNodeSet(a, path="//member")
 					output.items <- lapply(items, function(x) data.frame(t(unlist(xmlSApply(x, xmlValue))), row.names=NULL, stringsAsFactors = FALSE))
-					output.items.df <- rbind_all(output.items)
+					output.items.df <- bind_rows(output.items)
 					output.base.df <- data.frame(t(xmlSApply(a[[2]], xmlValue)), stringsAsFactors = FALSE)
 					output.df <- merge(output.base.df, output.items.df)
 				}
@@ -50,7 +50,7 @@ Committee.getCommitteeMembers <-
 		}
 		)
 		if (length(output.list)>1) {
-			output <- rbind_all(output.list)
+			output <- bind_rows(output.list)
 		} else {
 			output <- as.tbl(output.list[[1]])
 		}

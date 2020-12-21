@@ -81,7 +81,7 @@ CandidateBio.getBio <-
 # 			})
 # 			
 # 			#output <- do.call("rbind",ol2)
-# 			output <- rbind_all(ol2)
+# 			output <- bind_rows(ol2)
 # 			output
 # 		}
 # 		)

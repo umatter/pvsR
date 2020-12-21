@@ -85,7 +85,7 @@ CandidateBio.getAddlBio <-
 		)
 		
 		#output <- do.call("rbind", output.list2)
-		output <- dplyr::rbind_all(output.list2)
+		output <- bind_rows(output.list2)
 		return(output)
 	}
 

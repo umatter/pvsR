@@ -124,7 +124,7 @@ Candidates.getByOfficeTypeState <-
 			output.list <- redlist(output.list)
 		}
 		
-		output <- rbind_all(output.list)
+		output <- bind_rows(output.list)
 		
 		# Avoids that output is missleading, because electionYear is already given in request-output, but also a
 		# additionally generated (as electionYear.input). Problem exists because some request-outputs might be empty
