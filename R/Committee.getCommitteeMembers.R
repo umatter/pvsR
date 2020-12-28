@@ -24,10 +24,10 @@ Committee.getCommitteeMembers <-
 		#internal function:
 		Committee.getCommitteeMembers.basic <- 
 			function(.committeeId) {
-
+    		pvs.key <- getPVS_key()
 				request <-  "Committee.getCommitteeMembers?"
 				inputs  <-  paste("&committeeId=",.committeeId, sep="")
-				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
 				doc <- xmlTreeParse(pvs.url)
 				a <- xmlRoot(doc)
 				

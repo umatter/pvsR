@@ -29,10 +29,11 @@ CandidateBio.getAddlBio <-
 		CandidateBio.getAddlBio.basic <- 
 			function (.candidateId) {
 				
-				request <-  "CandidateBio.getAddlBio?"
+				pvs.key <- getPVS_key()
+        request <-  "CandidateBio.getAddlBio?"
 				inputs  <-  paste("&candidateId=",.candidateId, sep="")
 				url.base <- "http://api.votesmart.org/"
-				pvs.url <- paste(url.base,request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				pvs.url <- paste(url.base,request,"key=",pvs.key,inputs,sep="") #generate url for request
 				
 				doc <- xmlTreeParse(pvs.url)
 				a <- xmlRoot(doc)

@@ -22,8 +22,8 @@ Committee.getTypes <-
 		request <-  "Committee.getTypes?"
 		inputs  <-  ""
 		url.base <- "http://api.votesmart.org/"
-		
-		pvs.url <- paste(url.base,request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+		pvs.key <- getPVS_key()		
+		pvs.url <- paste(url.base,request,"key=",pvs.key,inputs,sep="") #generate url for request
 		output <- t(xmlSApply(removeChildren(xmlRoot(xmlTreeParse(pvs.url,useInternalNodes=TRUE)),kids=1), function(x) xmlSApply(x, xmlValue)))
 		output <- as.tbl(data.frame(output, row.names=NULL, stringsAsFactors = FALSE))
 		

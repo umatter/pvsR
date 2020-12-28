@@ -26,7 +26,8 @@ District.getByZip <-
 				
 				request <-  "District.getByZip?"
 				inputs  <-  paste("&zip5=",.zip5,sep="")
-				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				pvs.key <- getPVS_key()
+        pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
 				
 				output.base <- xmlRoot(xmlTreeParse(pvs.url, useInternalNodes=TRUE))
 				districts <-  removeChildren(output.base, kids=list(1,2))
@@ -60,7 +61,8 @@ District.getByZip <-
 			
 			# internal function
 			District.getByZip.basic2 <- function (.zip5, .zip4) {
-				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				pvs.key <- getPVS_key()
+        pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
 
 				request <-  "District.getByZip?"
 				inputs  <-  paste("&zip5=",.zip5, "&zip4=", .zip4, sep="")

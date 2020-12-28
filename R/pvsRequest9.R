@@ -1,7 +1,8 @@
 
 pvsRequest9 <- 
   function (request,inputs) {
-  pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+    pvs.key <- getPVS_key()
+    pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
   
   if (names(xmlRoot(xmlTreeParse(pvs.url,useInternalNodes=TRUE)))[1]=="errorMessage") {
     

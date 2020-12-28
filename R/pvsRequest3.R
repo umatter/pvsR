@@ -1,8 +1,8 @@
 
 pvsRequest3 <-
 	function (request,inputs) {
-		
-		pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+		pvs.key <- getPVS_key()
+		pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
 		
 		# Handle slow connection (try max. 3 times to get data from PVS, otherwhise move on)
 		httpresp <- try(GET(url=pvs.url, timeout(5)), silent=TRUE)
