@@ -16,7 +16,8 @@ A data frame with a row for each candidate and columns with the following variab
 This function is a wrapper for the Npat.getNpat() method of the PVS API Npat class which returns the candidate's most recently filled out NPAT/PCT. The function sends a request with this method to the PVS API for all candidate IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get political courage tests of Barack Obama and John Sidney McCain III
 \dontrun{pcts <- Npat.getNpat(list(9490,53270))}

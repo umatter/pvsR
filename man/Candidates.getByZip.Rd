@@ -18,7 +18,8 @@ A data frame with a row for each candidate and columns with the following variab
 This function is a wrapper for the Candidates.getByZip() method of the PVS API Candidates class which grabs a list of candidates according to the ZIP code. The function sends a request with this method to the PVS API for all ZIP codes and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of candidates according to the ZIP code.
 \dontrun{candidates <- Candidates.getByZip(list(10001,10002),2012)}

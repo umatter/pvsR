@@ -16,7 +16,8 @@ A data frame with a row for each action and columns with the following variables
 This function is a wrapper for the Votes.getBillAction() method of the PVS API Votes class which grabs detailed action information on a certain stage of the bill. The function sends a request with this method to the PVS API for all action IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get information about certain actions
 \dontrun{actioninfo <- Votes.getBillAction(actionId=list(2575,18436,10194))}

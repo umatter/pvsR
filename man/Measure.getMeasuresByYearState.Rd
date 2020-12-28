@@ -18,7 +18,8 @@ A data frame with a row for each ballot measure and columns with the following v
 This function is a wrapper for the Measure.getMeasuresByYearState() method of the PVS API Measure class which grabs a list of state ballot measures in a given year. The function sends a request with this method to the PVS API for all years and state IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of ballot measures for a certain state and year
 \dontrun{measures <- Measure.getMeasuresByYearState(list(2010,2012),"FL")}

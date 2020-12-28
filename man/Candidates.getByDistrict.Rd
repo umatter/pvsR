@@ -18,7 +18,8 @@ A data frame with a row for each candidate and year and columns with the followi
 This function is a wrapper for the Candidates.getByDistrict() method of the PVS API Candidates class which grabs a list of candidates according to the district they represent for each district and election year. The function sends a request with this method to the PVS API for all district IDs and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of candidates of certain districts
 \dontrun{district <- Candidates.getByDistrict(list(25157,25155),2012)}

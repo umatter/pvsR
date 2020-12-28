@@ -22,7 +22,8 @@ Get a list of candidates according to the election they are running for
 This function is a wrapper for the Candidates.getByElection() method of the PVS API Candidates class which grabs a list of candidates according to the election they are running for. The function sends a request with this method to the PVS API for all electionIDs and stageIDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of candidates for certain election IDs
 \dontrun{candidates <- Candidates.getByElection(list(2582,2646))}

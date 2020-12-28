@@ -15,7 +15,8 @@ statelist.list.state*.name
 This function is a wrapper for the State.getStateIDs() method of the PVS API State class which returns a simple state ID and name list for mapping IDs to state names.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option 
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of states with their IDs
 \dontrun{stateIDs <- State.getStateIDs()}

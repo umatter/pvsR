@@ -13,7 +13,8 @@ A data frame with a row for each committee type and columns with the following v
 This function is a wrapper for the Committee.getTypes() method of the PVS API Committee class which returns the existing committee types.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get the committee types
 \dontrun{comtypes <- Committee.getTypes()}

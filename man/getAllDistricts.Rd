@@ -13,7 +13,8 @@ A data frame with a row for each district and columns with the following variabl
 This function is essentially a wrapper around District.getByOfficeState().
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of all districts
 \dontrun{districts <- getAllDistricts()}

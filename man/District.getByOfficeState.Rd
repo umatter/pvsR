@@ -22,7 +22,8 @@ A data frame with a row for each district and columns with the following variabl
 This function is a wrapper for the District.getByOfficeState() method of the PVS API District class which grabs district IDs according to the office and state. The function sends a request with this method to the PVS API for all district names and office IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get districts for certain office and state IDs 
 \dontrun{districts <- District.getByOfficeState(officeId=list(8,9),stateId=list("NY","NJ"))}

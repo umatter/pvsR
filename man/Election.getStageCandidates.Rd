@@ -18,7 +18,8 @@ A data frame with a row for each combination of stage ID and election and column
 This function is a wrapper for the Election.getStageCandidates() method of the PVS API Election class which grabs district basic election data according to the election and stage ID. The function sends a request with this method to the PVS API for all election and stage IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get election data for certain election IDs
 \dontrun{election <- Election.getStageCandidates(stageId=list("P"),electionId=list(2582,2607))}

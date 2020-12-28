@@ -21,7 +21,8 @@ See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data 
 This function is a wrapper for the Votes.getBillsByYearState() method of the PVS API Votes class which returns a list of bills that fit the year and state input. The function sends a request with this method to the PVS API for all years and state IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a data frame of bills according to all year and state combinations
 \dontrun{bills <- Votes.getBillsByYearState(year=list(2011,2012),

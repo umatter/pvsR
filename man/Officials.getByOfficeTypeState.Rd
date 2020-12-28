@@ -18,7 +18,8 @@ A data frame with a row for each official and columns with the following variabl
 This function is a wrapper for the Officials.getByOfficeTypeState() method of the PVS API Officials class which grabs a list of officials according to the office type and state they represent. The function sends a request with this method to the PVS API for all state and office type IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 # Note that some officeTypeIds are only available on the state level or national level 
 # (e.g. "L" for State Legislature only if stateId is specified!)
 \dontrun{pvs.key <- "yourkey"}

@@ -16,7 +16,8 @@ A data frame with a row for each official and columns with the following variabl
 This function is a wrapper for the Local.getOfficials() method of the PVS API Local class which returns a list of officials in a locality. The function sends a request with this method to the PVS API for all local IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of officials according to certain local IDs 
 \dontrun{officials <- Local.getOfficials(list(3200,3203))}

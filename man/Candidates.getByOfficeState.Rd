@@ -22,7 +22,8 @@ A data frame with a row for each candidate and year and columns with the followi
 This function is a wrapper for the Candidates.getByOfficeState() method of the PVS API Candidate class which grabs a list of candidates according to office and state representation. The function sends a request with this method to the PVS API for all state IDs, office IDs and election years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a data frame of candidates according to all state/office/electionYear combinations
 \dontrun{candidates <- Candidates.getByOfficeState(stateId=list("NJ","NY"),officeId=list(6,7),

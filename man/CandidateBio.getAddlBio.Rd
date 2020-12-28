@@ -16,7 +16,8 @@ A data frame with a row for each candidate and columns with the following variab
 This function is a wrapper for the CandidateBio.getAddlBio() method of the PVS API CandidateBio class which grabs the extended biographical information for each candidate that has one. The function sends a request with this method to the PVS API for all candidate-IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get additional biographical data on Barack Obama 
 \dontrun{obama <- CandidateBio.getAddlBio(9490)}

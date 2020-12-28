@@ -20,7 +20,8 @@ A data frame with a row for each election and columns with the following variabl
 This function is a wrapper for the Election.getElectionByZip() method of the PVS API Election class which grabs district basic election data according to the ZIP code. If another year than the current year is chosen, all election data from that year up to the current year is returned. The function sends a request with this method to the PVS API for all ZIP codes given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get election data by ZIP code 
 \dontrun{election <- Election.getElectionByZip(zip5=list(10001,10002), year="2012")}
