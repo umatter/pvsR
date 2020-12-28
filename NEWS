@@ -59,4 +59,7 @@ pvsR 0.4
 * Updated package documentation with respect to references/citation
 
 
+pvsR 0.4.1
+-----------------------------------
 
+* Check whether the user's PVS API key is stored as an option named "pvs.key" (#5).

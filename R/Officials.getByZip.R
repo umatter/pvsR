@@ -9,7 +9,8 @@
 ##' @references http://api.votesmart.org/docs/Officials.html
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get a list of officials by ZIP code
 ##' \dontrun{officials <- Officials.getByZip(list(10001,10002))}

@@ -7,7 +7,8 @@
 ##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get all office types tracked
 ##' \dontrun{officetypes <- Office.getTypes()}

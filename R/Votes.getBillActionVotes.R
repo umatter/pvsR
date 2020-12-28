@@ -8,7 +8,8 @@
 ##' Use Votes.getBill() or Votes.getByOfficial() to get a list of action IDs.
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get votes of a certain candidate on a certain action
 ##' \dontrun{actionvote <- Votes.getBillActionVotes(list(31712,28686))}

@@ -8,7 +8,8 @@
 ##' Use CandidateBio.getBio(), Committee.getCommitteesByTypeState() or Votes.getBill() to get committee ID(s).
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get information about a certain committee
 ##' \dontrun{committee <- Committee.getCommittee(list(1,2))}
