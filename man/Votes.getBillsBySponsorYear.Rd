@@ -18,7 +18,8 @@ A data frame with a row for each bill and columns with the following variables d
 This function is a wrapper for the Votes.getBillsBySponsorYear() method of the PVS API Votes class which grabs a list of bills that fit the sponsor's candidateId and year. The function sends a request with this method to the PVS API for all candidate IDs and years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of bills for a certain candidate and year
 \dontrun{bills <- Votes.getBillsBySponsorYear(2010:2012,107800)}

@@ -16,7 +16,8 @@ A data frame with a row for each candidate and columns with the following variab
 This function is a wrapper for the Rating.getRating() method of the PVS API Rating class which dumps all candidate ratings from a scorecard by a special interest group (SIG). The function sends a request with this method to the PVS API for all rating IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get the candidate rating by a certain special interest group
 \dontrun{scorecard <- Rating.getRating(77)}

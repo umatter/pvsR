@@ -13,7 +13,8 @@ A data frame with a row for each branch and columns with the following variables
 This function is a wrapper for the Office.getBranches() method of the PVS API Office class which grabs a list of branches of government and their IDs.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of government branches and their IDs
 \dontrun{branches <- Office.getBranches()}

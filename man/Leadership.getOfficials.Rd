@@ -18,7 +18,8 @@ A data frame with a row for each leadership position and columns with the follow
 This function is a wrapper for the Leadership.getOfficials() method of the PVS API Leadership class which grabs a list of officials that hold the leadership role in certain states. The function sends a request with this method to the PVS API for all state and leadership IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get leaders by state ID and leadership ID 
 \dontrun{officials <- Leadership.getOfficials(list("NY","FL"),list(138,140))}

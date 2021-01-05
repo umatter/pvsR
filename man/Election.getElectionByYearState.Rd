@@ -18,7 +18,8 @@ A data frame with a row for each election and columns with the following variabl
 This function is a wrapper for the Election.getElectionByYearState() method of the PVS API Election class which grabs district basic election data. The function sends a request with this method to the PVS API for all state IDs and years given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get information about an election of a certain year and state 
 \dontrun{election <- Election.getElectionByYearState(list("NY","FL"),2012)}

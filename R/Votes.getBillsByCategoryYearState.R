@@ -11,7 +11,8 @@
 ##' Use Votes.getCategories() or Rating.getCandidateRating() to get a list of category IDs.
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get a list of bills in a certain category, year and state
 ##' \dontrun{bills <- Votes.getBillsByCategoryYearState(as.list(2010:2012),"NY",10)}

@@ -19,7 +19,8 @@ See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data 
 This function is a wrapper for the Officials.getByZip() method of the PVS API Officials class which grabs a list of officials according to the ZIP code of the area they represent. The function sends a request with this method to the PVS API for all ZIP Codes given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of officials by ZIP code
 \dontrun{officials <- Officials.getByZip(list(10001,10002))}

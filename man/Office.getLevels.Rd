@@ -13,7 +13,8 @@ A data frame with a row for each level and columns with the following variables 
 This function is a wrapper for the Office.getLevels() method of the PVS API Office class which grabs a list of the levels of government and their IDs.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of government levels and their IDs
 \dontrun{levels <- Office.getLevels()}

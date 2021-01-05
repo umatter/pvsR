@@ -16,7 +16,8 @@ A list with several data frames containing the elements of CandidateBio.getBio()
 This function is a wrapper for the CandidateBio.getDetailedBio() method of the PVS API CandidateBio class which grabs the detailed biographical information for each candidate. The function sends a request with this method to the PVS API for all candidate IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get main biographical data on Barack Obama and Mitt Romney
 \dontrun{bio <- CandidateBio.getDetailedBio(list(9490,21942))}

@@ -18,7 +18,8 @@ A data frame with a row for each special interest group and columns with the fol
 This function is a wrapper for the Rating.getSigList() method of the PVS API Rating class which dumps special interest groups (SIGs) according to category and state. The function sends a request with this method to the PVS API for all category and state IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of special interest groups for certain categories and all states
 \dontrun{sig <- Rating.getSigList(categoryId=list(2,4,5,7))}

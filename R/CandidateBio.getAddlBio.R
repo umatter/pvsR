@@ -9,7 +9,8 @@
 ##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get additional biographical data on Barack Obama 
 ##' \dontrun{obama <- CandidateBio.getAddlBio(9490)}
@@ -28,10 +29,11 @@ CandidateBio.getAddlBio <-
 		CandidateBio.getAddlBio.basic <- 
 			function (.candidateId) {
 				
-				request <-  "CandidateBio.getAddlBio?"
+				pvs.key <- getPVS_key()
+        request <-  "CandidateBio.getAddlBio?"
 				inputs  <-  paste("&candidateId=",.candidateId, sep="")
 				url.base <- "http://api.votesmart.org/"
-				pvs.url <- paste(url.base,request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				pvs.url <- paste(url.base,request,"key=",pvs.key,inputs,sep="") #generate url for request
 				
 				doc <- xmlTreeParse(pvs.url)
 				a <- xmlRoot(doc)

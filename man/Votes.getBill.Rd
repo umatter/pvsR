@@ -18,7 +18,8 @@ If separate is not specified, a data frame with a row for each bill and columns 
 This function is a wrapper for the Votes.getBill() method of the PVS API Votes class which grabs the general information on a bill. The function sends a request with this method to the PVS API for all bill IDs given as a function input, extracts the XML values from the returned XML file(s) and returns them arranged in one data frame.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get information about certain bills
 \dontrun{billinfo <- Votes.getBill(list(2819,6427))}

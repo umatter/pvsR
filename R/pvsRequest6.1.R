@@ -1,6 +1,7 @@
 pvsRequest6.1 <-
 function (request,inputs) {
-  pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+  pvs.key <- getPVS_key()
+  pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
   
   
   httpresp <- GET(url=pvs.url)

@@ -13,7 +13,8 @@ A data frame with a row for each office and columns with the following variables
 This function is essentially a wrapper around Office.getOfficesByLevel().
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get a list of all offices on all levels
 \dontrun{offices <- getOffices()}

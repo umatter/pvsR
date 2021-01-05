@@ -13,7 +13,8 @@ A data frame with rows for each office type and columns with the following varia
 This function is a wrapper for the Office.getTypes() method of the PVS API Office class which grabs a list of office types Project Vote Smart keeps track of.
 }
 \examples{
-# First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+# First, make sure your personal PVS API key is saved as an option
+# (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 \dontrun{pvs.key <- "yourkey"}
 # get all office types tracked
 \dontrun{officetypes <- Office.getTypes()}

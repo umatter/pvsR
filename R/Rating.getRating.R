@@ -8,7 +8,8 @@
 ##' Use Rating.getSigRatings() or Rating.getCandidateRating() to get a list of rating IDs.
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get the candidate rating by a certain special interest group
 ##' \dontrun{scorecard <- Rating.getRating(77)}

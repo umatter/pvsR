@@ -9,7 +9,8 @@
 ##' See also: Matter U, Stutzer A (2015) pvsR: An Open Source Interface to Big Data on the American Political Sphere. PLoS ONE 10(7): e0130501. doi: 10.1371/journal.pone.0130501
 ##' @author Ulrich Matter <ulrich.matter-at-unibas.ch>
 ##' @examples
-##' # First, make sure your personal PVS API key is saved as character string in the pvs.key variable:
+##' # First, make sure your personal PVS API key is saved as an option
+##' # (options("pvs.key" = "yourkey")) or in the pvs.key variable:
 ##' \dontrun{pvs.key <- "yourkey"}
 ##' # get a list of members of certain committees
 ##' \dontrun{comember <- Committee.getCommitteeMembers(1)}
@@ -23,10 +24,10 @@ Committee.getCommitteeMembers <-
 		#internal function:
 		Committee.getCommitteeMembers.basic <- 
 			function(.committeeId) {
-
+    		pvs.key <- getPVS_key()
 				request <-  "Committee.getCommitteeMembers?"
 				inputs  <-  paste("&committeeId=",.committeeId, sep="")
-				pvs.url <- paste("http://api.votesmart.org/",request,"key=",get('pvs.key',envir=.GlobalEnv),inputs,sep="") #generate url for request
+				pvs.url <- paste("http://api.votesmart.org/",request,"key=",pvs.key,inputs,sep="") #generate url for request
 				doc <- xmlTreeParse(pvs.url)
 				a <- xmlRoot(doc)
 				
